@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Person {
+  id            String   @id @default(uuid())
+  name          String
+  birth_date    DateTime
+  cpf           String
+  address       String
+  neighborhood  String
+  number        Int
+  complement    String
+  cep           String
+  city          String
+  uf            String
+  phone         String
+  email         String   @unique
+  password_hash String
+
+  Professional Professional[]
+  User         User[]
+
+  @@map("person")
+}
+
+model Professional {
+  person    Person @relation(fields: [person_id], references: [id])
+  person_id String @id
+
+  crp       String
+  voluntary Boolean
+
+  @@map("professionals")
+}
+
+model User {
+  person    Person @relation(fields: [person_id], references: [id])
+  person_id String @id
+
+  gender String
+  Goal   Goal[]
+
+  @@map("user")
+}
+
+model Goal {
+  id           String   @id @default(uuid())
+  user         User     @relation(fields: [userPersonId], references: [person_id])
+  userPersonId String   @map("user_person_id")
+  description  String
+  numberDays   Int
+  isExecuted   Boolean  @default(false)
+  isExpire     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("goal")
+}
