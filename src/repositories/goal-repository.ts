@@ -10,4 +10,6 @@ export interface GoalRepository {
     personId: string,
     goal: Prisma.GoalUncheckedUpdateInput
   ): Promise<Goal | null>
+  delete(goalId: string, personId: string): void
+  fetchManyGoals(personId: string): Promise<Goal[] | null>
 }

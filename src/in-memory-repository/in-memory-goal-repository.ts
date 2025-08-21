@@ -96,4 +96,36 @@ export class InMemoryGoalRepository implements GoalRepository {
 
     return updatedGoal
   }
+
+  async delete(goalId: string, personId: string) {
+    const person = this.goals.find(goal => goal.userPersonId === personId)
+
+    if (!person) {
+      return null
+    }
+
+    const goal = await this.findById(goalId)
+
+    if (!goal) {
+      return null
+    }
+
+    this.goals = this.goals.filter(g => g.id !== goalId)
+
+    return goal
+  }
+
+  async fetchManyGoals(personId: string) {
+    const person = this.goals.find(goal => goal.userPersonId === personId)
+
+    if (!person) {
+      return null
+    }
+
+    const goalsPerson = this.goals.filter(
+      goal => goal.userPersonId === personId
+    )
+
+    return goalsPerson
+  }
 }
