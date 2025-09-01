@@ -45,6 +45,7 @@ model User {
 
   gender String
   Goal   Goal[]
+  Daily  Daily[]
 
   @@map("user")
 }
@@ -54,11 +55,22 @@ model Goal {
   user         User     @relation(fields: [userPersonId], references: [person_id])
   userPersonId String   @map("user_person_id")
   description  String
-  numberDays   Int
-  isExecuted   Boolean  @default(false)
-  isExpire     Boolean  @default(false)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  numberDays   Int      @map("number_days")
+  isExecuted   Boolean  @default(false) @map("is_executed")
+  isExpire     Boolean  @default(false) @map("is_expire")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("goal")
+}
+
+model Daily {
+  id           String   @id @default(uuid())
+  content      String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation(fields: [userPersonId], references: [person_id])
+  userPersonId String   @map("user_person_id")
+
+  @@map("daily")
 }

@@ -25,10 +25,21 @@ export const registerProfessional: FastifyPluginAsyncZod = async app => {
           phone: z.string(),
           email: z.email(),
           password: z.string(),
-
           crp: z.string(),
           voluntary: z.boolean(),
         }),
+        response: {
+          201: z.object({
+            professional: z.object({
+              person_id: z.string(),
+              crp: z.string(),
+              voluntary: z.boolean(),
+            })
+          }),
+          409: z.object({
+            message: z.string(),
+          }),
+        },
       },
     },
     async (request, reply) => {
@@ -71,22 +82,21 @@ export const registerProfessional: FastifyPluginAsyncZod = async app => {
       const professionalUseCase = makeRegisterProfessionalUseCase()
 
       try {
-        await professionalUseCase.execute({
+        const { professional } = await professionalUseCase.execute({
           person_id: person.id,
           crp,
           voluntary,
         })
+        return reply.status(201).send({ professional })
       } catch (err) {
         if (err instanceof ResourceNotFoundError) {
-          return reply.status(409).send()
+          return reply.status(409).send({ message: 'Resource not found' })
         }
-
         if (err instanceof InvalidParametersError) {
-          return reply.status(409).send()
+          return reply.status(409).send({ message: 'Invalid parameters' })
         }
+        return reply.status(409).send({ message: 'Unknown error' })
       }
-
-      return reply.status(201).send()
     }
   )
 }

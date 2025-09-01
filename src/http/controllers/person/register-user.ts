@@ -28,7 +28,12 @@ export const registerUser: FastifyPluginAsyncZod = async app => {
           gender: z.string().optional(),
         }),
         response: {
-          201: z.object({ void: z.void() }),
+          201: z.object({
+            user: z.object({
+              person_id: z.string(),
+              gender: z.string(),
+            })
+          }),
           400: z.object({ message: z.string() }),
           500: z.object({ message: z.string() }),
         },
@@ -73,12 +78,11 @@ export const registerUser: FastifyPluginAsyncZod = async app => {
 
         const userUseCase = makeRegisterUserUseCase()
 
-        await userUseCase.execute({
+        const { user } = await userUseCase.execute({
           person_id: person.id,
           gender,
         })
-
-        reply.status(201).send()
+        reply.status(201).send({ user })
       } catch (error) {
         if (error instanceof EmailAlreadyExistsError) {
           return reply.status(400).send({ message: error.message })
