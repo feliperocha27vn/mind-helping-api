@@ -10,4 +10,15 @@ export class PrismaProfessionalRepository implements ProfessionalRepository {
 
     return professional
   }
+
+  async fetchMany(search: string) {
+    const professionals = await prisma.$queryRaw`
+      SELECT person.name, person.email, person.phone, person.address, person.neighborhood, person.city, person.uf
+      FROM professionals
+      LEFT JOIN person ON professionals.person_id = person.id
+      WHERE person.name ILIKE '%' || ${search} || '%'
+    `
+
+    return professionals
+  }
 }

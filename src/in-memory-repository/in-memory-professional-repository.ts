@@ -1,8 +1,9 @@
-import type { Prisma, Professional } from '@prisma/client'
+import type { Person, Prisma, Professional } from '@prisma/client'
 import type { ProfessionalRepository } from '../repositories/professional-repository'
 
 export class InMemoryProfessionalRepository implements ProfessionalRepository {
-  public items: Professional[] = []
+  public items: Person[] = []
+  public professionals: Professional[] = []
 
   async create(data: Prisma.ProfessionalUncheckedCreateInput) {
     const professional = {
@@ -11,8 +12,16 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
       voluntary: data.voluntary,
     }
 
-    this.items.push(professional)
+    this.professionals.push(professional)
 
     return professional
+  }
+
+  async fetchMany(search: string) {
+    const professionals = this.items.filter(item =>
+      item.name.toLowerCase().includes(search.toLowerCase())
+    )
+
+    return professionals
   }
 }

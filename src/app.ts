@@ -9,6 +9,7 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { personRoutes } from './http/controllers/person/routes'
+import { routesProfessional } from './http/controllers/professional/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -34,3 +35,4 @@ app.register(fastifySwaggerUi, {
 })
 
 app.register(personRoutes)
+app.register(routesProfessional)
