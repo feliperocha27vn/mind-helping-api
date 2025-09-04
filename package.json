@@ -6,6 +6,7 @@
     "test": "vitest run --project unit",
     "test:watch": "vitest run --watch --project unit",
     "test:e2e": "vitest run --project e2e",
+    "test:e2e:watch": "vitest --project e2e",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

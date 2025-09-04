@@ -1,0 +1,45 @@
+{
+	"meta": {
+		"generatedAt": "2025-09-04T19:43:20.105Z",
+		"tasksAnalyzed": 4,
+		"totalTasks": 4,
+		"analysisCount": 4,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "[História] Cadastro de novos usuários (Pacientes)",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand the task '[História] Cadastro de novos usuários (Pacientes)'. Break down the subtask 'API: Adicionar suporte ao cadastro via Google' into separate frontend and backend steps, including handling the OAuth callback and user creation. Also, expand the subtask 'Mobile: Integrar a tela de cadastro com o endpoint da API' to include specific subtasks for form state management, displaying validation errors from the API, and handling the loading/success/error states of the registration process.",
+			"reasoning": "The task has high complexity due to the combination of backend and mobile development, complex business rules (CPF validation), and two separate external integrations (Correios API, Google OAuth). The existing subtasks are good but some are too large, particularly the Google login and the mobile API integration, which hide significant implementation details."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "[História] Cadastro de novos profissionais",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand the task '[História] Cadastro de novos profissionais'. Add subtasks for security best practices that are missing compared to patient registration, specifically 'Implementar regra de negócio para senha forte' and 'Implementar criptografia para o armazenamento da senha'. Furthermore, break down the subtask 'API: Implementar validação para verificar se o CRP está ativo' into at least two new subtasks: 'Investigar e definir a estratégia para validação do CRP' and 'Implementar o serviço de validação de CRP com tratamento de falhas'.",
+			"reasoning": "The complexity is high primarily due to the high-risk, undefined integration for CRP validation, which may require web scraping or a non-standard API. The current subtasks are insufficient as they omit crucial security steps (password strength, hashing) and don't break down the complex CRP validation into manageable research and implementation phases."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "[História] Login de usuários e profissionais",
+			"complexityScore": 6,
+			"recommendedSubtasks": 0,
+			"expansionPrompt": "The task '[História] Login de usuários e profissionais' is already well-defined with 7 subtasks covering the API, mobile, and web implementations. No further expansion is required at this time. The current breakdown is sufficient for development.",
+			"reasoning": "The complexity is medium as it involves creating a unified API endpoint and implementing the login flow on two separate platforms (web and mobile), which requires coordination. However, the existing 7 subtasks already provide a clear and granular breakdown of the work, covering the API, mobile, and web components adequately."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "[História] Edição e exclusão de perfis",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Expand the task '[História] Edição e exclusão de perfis'. Break down the subtask 'API: Criar endpoints GET, PUT e DELETE para /me' into three separate subtasks, one for each HTTP method (GET /me, PUT /me, DELETE /me), ensuring each includes authorization logic. Similarly, expand the mobile and web integration subtasks to have distinct items for fetching data (GET), updating data (PUT), and handling the deletion flow with a confirmation dialog (DELETE).",
+			"reasoning": "The complexity is medium-high due to the need to implement three distinct, secure operations (GET, PUT, DELETE) on a unified API endpoint and then replicate these flows on both web and mobile clients. The current subtasks are too broad, grouping multiple functionalities (e.g., GET, PUT, and DELETE logic) into single items, which obscures the actual effort required for each part."
+		}
+	]
+}

@@ -1,6 +1,7 @@
 import type { Prisma, Professional } from '@prisma/client'
 
-interface ProfessionalWithPerson {
+export interface ProfessionalWithPerson {
+  id: string
   name: string
   email: string
   phone: string
@@ -12,5 +13,5 @@ interface ProfessionalWithPerson {
 
 export interface ProfessionalRepository {
   create(data: Prisma.ProfessionalUncheckedCreateInput): Promise<Professional>
-  fetchMany(search: string): Promise<ProfessionalWithPerson[]>
+  fetchMany(search: string): Promise<ProfessionalWithPerson[] | []>
 }

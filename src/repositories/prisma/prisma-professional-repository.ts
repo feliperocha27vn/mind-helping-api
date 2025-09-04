@@ -1,6 +1,9 @@
 import type { Prisma } from '@prisma/client'
 import { prisma } from '../../lib/prisma'
-import type { ProfessionalRepository } from '../professional-repository'
+import type {
+  ProfessionalRepository,
+  ProfessionalWithPerson,
+} from '../professional-repository'
 
 export class PrismaProfessionalRepository implements ProfessionalRepository {
   async create(data: Prisma.ProfessionalUncheckedCreateInput) {
@@ -13,12 +16,12 @@ export class PrismaProfessionalRepository implements ProfessionalRepository {
 
   async fetchMany(search: string) {
     const professionals = await prisma.$queryRaw`
-      SELECT person.name, person.email, person.phone, person.address, person.neighborhood, person.city, person.uf
+      SELECT person.name, person.email, person.phone, person.address, person.neighborhood, person.city, person.uf, person.id
       FROM professionals
       LEFT JOIN person ON professionals.person_id = person.id
       WHERE person.name ILIKE '%' || ${search} || '%'
     `
 
-    return professionals
+    return professionals as ProfessionalWithPerson[]
   }
 }

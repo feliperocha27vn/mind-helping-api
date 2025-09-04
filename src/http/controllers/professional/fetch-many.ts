@@ -15,6 +15,7 @@ export const fetchMany: FastifyPluginAsyncZod = async app => {
           200: z.object({
             professionals: z.array(
               z.object({
+                id: z.uuid(),
                 name: z.string(),
                 email: z.string(),
                 phone: z.string(),

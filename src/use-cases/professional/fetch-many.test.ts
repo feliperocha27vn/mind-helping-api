@@ -5,21 +5,23 @@ import { InMemoryProfessionalRepository } from '../../in-memory-repository/in-me
 import type { ProfessionalRepository } from '../../repositories/professional-repository'
 import { FetchManyProfessionalsUseCase } from './fetch-many'
 
+let personRepository: InMemoryPersonRepository
 let professionalRepository: ProfessionalRepository
 let sut: FetchManyProfessionalsUseCase
 
 describe('Fetch many professionals use case', () => {
   beforeEach(() => {
-    professionalRepository = new InMemoryProfessionalRepository()
+    personRepository = new InMemoryPersonRepository()
+    professionalRepository = new InMemoryProfessionalRepository(
+      personRepository
+    )
     sut = new FetchManyProfessionalsUseCase(professionalRepository)
   })
 
   it('should be able fetch many professionals', async () => {
-    const personRepository = new InMemoryPersonRepository()
-
     const person = await personRepository.create({
       id: 'person-01',
-      name: 'Dr. Maria Silva Santos',
+      name: 'Maria Silva Santos',
       birth_date: '1985-03-15',
       cpf: '123.456.789-00',
       address: 'Rua das Flores',
@@ -36,7 +38,7 @@ describe('Fetch many professionals use case', () => {
 
     const person2 = await personRepository.create({
       id: 'person-02',
-      name: 'Dr. João Silva Santos',
+      name: 'João Silva Santos',
       birth_date: '1985-03-15',
       cpf: '123.456.789-00',
       address: 'Rua das Flores',
@@ -63,16 +65,16 @@ describe('Fetch many professionals use case', () => {
       voluntary: true,
     })
 
-    const { professionals } = await sut.execute()
+    const { professionals } = await sut.execute({ search: 'Silva' })
 
     expect(professionals).toEqual([
       expect.objectContaining({
-        person_id: 'person-01',
-        crp: '06/123456',
+        id: 'person-01',
+        name: 'Maria Silva Santos',
       }),
       expect.objectContaining({
-        person_id: 'person-02',
-        crp: '06/123457',
+        id: 'person-02',
+        name: 'João Silva Santos',
       }),
     ])
   })
