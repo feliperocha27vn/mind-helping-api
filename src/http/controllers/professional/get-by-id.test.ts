@@ -11,8 +11,8 @@ afterAll(async () => {
   await app.close()
 })
 
-describe('Fetch Many Professionals', () => {
-  it('should be able to fetch many professionals', async () => {
+describe('Get Professional by id', () => {
+  it('should be able to fetch a professional by id', async () => {
     const person = await prisma.person.create({
       data: {
         name: 'Ana Clara Oliveira',
@@ -39,11 +39,9 @@ describe('Fetch Many Professionals', () => {
       },
     })
 
-    const reply = await request(app.server).get('/professionals').query({
-      search: 'Ana',
-    })
+    const reply = await request(app.server).get(`/professional/${person.id}`)
 
     expect(reply.statusCode).toEqual(200)
-    expect(reply.body.professionals).toBeInstanceOf(Array)
+    expect(reply.body.professional).toBeInstanceOf(Object)
   })
 })

@@ -14,4 +14,5 @@ export interface ProfessionalWithPerson {
 export interface ProfessionalRepository {
   create(data: Prisma.ProfessionalUncheckedCreateInput): Promise<Professional>
   fetchMany(search: string): Promise<ProfessionalWithPerson[] | []>
+  getById(professionalId: string): Promise<ProfessionalWithPerson | null>
 }

@@ -11,8 +11,9 @@ afterAll(async () => {
   await app.close()
 })
 
-describe('Fetch Many Professionals', () => {
-  it('should be able to fetch many professionals', async () => {
+describe('Create goal', () => {
+  it('should be able to create a goal', async () => {
+    // Primeiro criar a Person
     const person = await prisma.person.create({
       data: {
         name: 'Ana Clara Oliveira',
@@ -31,19 +32,20 @@ describe('Fetch Many Professionals', () => {
       },
     })
 
-    await prisma.professional.create({
+    // Depois criar o User vinculado à Person
+    const user = await prisma.user.create({
       data: {
-        crp: '06/123456',
-        voluntary: true,
         person_id: person.id,
+        gender: 'F',
       },
     })
 
-    const reply = await request(app.server).get('/professionals').query({
-      search: 'Ana',
+    const reply = await request(app.server).post('/goal').send({
+      userPersonId: user.person_id, // Usar o person_id do User
+      description: 'New Goal',
+      numberDays: 5,
     })
 
-    expect(reply.statusCode).toEqual(200)
-    expect(reply.body.professionals).toBeInstanceOf(Array)
+    expect(reply.statusCode).toEqual(201)
   })
 })

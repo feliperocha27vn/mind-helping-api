@@ -62,4 +62,33 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
 
     return professionals
   }
+
+  async getById(professionalId: string) {
+    const professional = this.items.find(
+      item => item.person_id === professionalId
+    )
+
+    if (!professional) {
+      return null
+    }
+
+    const person = (
+      this.personRepository as InMemoryPersonRepository
+    ).items.find(person => person.id === professional.person_id)
+
+    if (!person) {
+      return null
+    }
+
+    return {
+      id: person.id,
+      name: person.name,
+      email: person.email,
+      phone: person.phone,
+      address: person.address,
+      neighborhood: person.neighborhood,
+      city: person.city,
+      uf: person.uf,
+    }
+  }
 }

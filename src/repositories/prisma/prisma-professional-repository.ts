@@ -24,4 +24,44 @@ export class PrismaProfessionalRepository implements ProfessionalRepository {
 
     return professionals as ProfessionalWithPerson[]
   }
+
+  async getById(
+    professionalId: string
+  ): Promise<ProfessionalWithPerson | null> {
+    const professional = await prisma.professional.findUnique({
+      where: {
+        person_id: professionalId,
+      },
+      include: {
+        person: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            address: true,
+            neighborhood: true,
+            city: true,
+            uf: true,
+          },
+        },
+      },
+    })
+
+    if (!professional || !professional.person) {
+      return null
+    }
+
+    // Mapear para o formato esperado
+    return {
+      id: professional.person.id,
+      name: professional.person.name,
+      email: professional.person.email,
+      phone: professional.person.phone,
+      address: professional.person.address,
+      neighborhood: professional.person.neighborhood,
+      city: professional.person.city,
+      uf: professional.person.uf,
+    }
+  }
 }

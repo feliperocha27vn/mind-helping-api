@@ -8,6 +8,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { routesGoal } from './http/controllers/goal/routes'
 import { personRoutes } from './http/controllers/person/routes'
 import { routesProfessional } from './http/controllers/professional/routes'
 
@@ -36,3 +37,4 @@ app.register(fastifySwaggerUi, {
 
 app.register(personRoutes)
 app.register(routesProfessional)
+app.register(routesGoal)
