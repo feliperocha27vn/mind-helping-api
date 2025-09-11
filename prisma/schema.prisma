@@ -33,8 +33,10 @@ model Professional {
   person    Person @relation(fields: [person_id], references: [id])
   person_id String @id
 
-  crp       String
-  voluntary Boolean
+  crp        String
+  voluntary  Boolean
+  Schedule   Schedule[]
+  Scheduling Scheduling[]
 
   @@map("professionals")
 }
@@ -43,9 +45,10 @@ model User {
   person    Person @relation(fields: [person_id], references: [id])
   person_id String @id
 
-  gender String
-  Goal   Goal[]
-  Daily  Daily[]
+  gender     String
+  Goal       Goal[]
+  Daily      Daily[]
+  Scheduling Scheduling[]
 
   @@map("user")
 }
@@ -73,4 +76,47 @@ model Daily {
   userPersonId String   @map("user_person_id")
 
   @@map("daily")
+}
+
+model Schedule {
+  id                   String       @id @default(uuid())
+  professional         Professional @relation(fields: [professionalPersonId], references: [person_id])
+  professionalPersonId String       @map("professional_person_id")
+  initialTime          DateTime?    @map("initial_time")
+  endTime              DateTime?    @map("end_time")
+  interval             Int
+  cancellationPolicy   Int          @map("cancellation_policy")
+  averageValue         Decimal      @map("average_value")
+  observation          String?
+  isControlled         Boolean
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Hourly    Hourly[]
+
+  @@map("schedule")
+}
+
+model Scheduling {
+  id                   String       @id @default(uuid())
+  hourly               Hourly       @relation(fields: [hourlyId], references: [id])
+  hourlyId             String       @map("hourly_id")
+  professional         Professional @relation(fields: [professionalPersonId], references: [person_id])
+  professionalPersonId String       @map("professional_person_id")
+  user                 User         @relation(fields: [userPersonId], references: [person_id])
+  userPersonId         String       @map("user_person_id")
+
+  @@map("scheduling")
+}
+
+model Hourly {
+  id         String       @id @default(uuid())
+  schedule   Schedule     @relation(fields: [scheduleId], references: [id])
+  scheduleId String       @map("schedule_id")
+  date       DateTime
+  hour       String
+  isOcuped   Boolean      @default(false) @map("is_ocuped")
+  Scheduling Scheduling[]
+
+  @@map("hourly")
 }
