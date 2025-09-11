@@ -10,19 +10,10 @@ export const create: FastifyPluginAsyncZod = async app => {
       schema: {
         tags: ['Goal'],
         body: z.object({
-          userPersonId: z.uuid(),
+          userPersonId: z.string().uuid(),
           description: z.string(),
           numberDays: z.number().min(1),
         }),
-        response: {
-          201: z.void(),
-          400: z.object({
-            message: z.string(),
-          }),
-          500: z.object({
-            message: z.string(),
-          }),
-        },
       },
     },
     async (request, reply) => {

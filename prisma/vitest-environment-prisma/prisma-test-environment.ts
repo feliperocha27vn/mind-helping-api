@@ -2,7 +2,6 @@ import 'dotenv/config'
 import { execSync } from 'node:child_process'
 import { randomUUID } from 'node:crypto'
 import type { Environment } from 'vitest/environments'
-import { prisma } from '../../src/lib/prisma'
 
 function generateDatabaseUrl(schema: string) {
   if (!process.env.DATABASE_URL) {
@@ -24,15 +23,24 @@ export default (<Environment>{
 
     process.env.DATABASE_URL = databaseUrl
 
-    execSync('npx prisma migrate deploy')
+    // Use db push to create the schema without migration conflicts
+    execSync('npx prisma db push --force-reset --skip-generate')
 
-        return {
+    return {
       async teardown() {
-        await prisma.$executeRawUnsafe(
-          `DROP SCHEMA IF EXISTS "${schema}" CASCADE`
-        )
+        // Import prisma here to use the correct instance with the test schema
+        const { prisma } = await import('../../src/lib/prisma.js')
 
-        await prisma.$disconnect()
+        try {
+          await prisma.$executeRawUnsafe(
+            `DROP SCHEMA IF EXISTS "${schema}" CASCADE`
+          )
+        } catch (error) {
+          // Ignore errors during cleanup
+          console.warn(`Failed to cleanup schema ${schema}:`, error)
+        } finally {
+          await prisma.$disconnect()
+        }
       },
     }
   },

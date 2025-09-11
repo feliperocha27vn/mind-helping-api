@@ -24,8 +24,8 @@ app.setValidatorCompiler(validatorCompiler)
 app.register(fastifySwagger, {
   openapi: {
     info: {
-      title: 'MindHelping Professional API',
-      version: '1.0.0',
+      title: 'MindHelping API 🧠',
+      version: '1.0.1',
     },
   },
   transform: jsonSchemaTransform,

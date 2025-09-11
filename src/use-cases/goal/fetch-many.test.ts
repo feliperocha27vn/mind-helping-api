@@ -1,5 +1,5 @@
 import { NotExistingGoalsRegisteredError } from '@/errors/not-existing-goals-registred'
-import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import { InMemoryGoalRepository } from '@/in-memory-repository/in-memory-goal-repository'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { hash } from 'bcryptjs'
@@ -71,7 +71,7 @@ describe('Fetch Many Goals', () => {
       sut.execute({
         personId: 'non-existing-person-id',
       })
-    ).rejects.toThrow(ResourceNotFoundError)
+    ).rejects.toThrow(PersonNotFoundError)
   })
 
   it('should not able to fetch many goals if person not registered goal', async () => {

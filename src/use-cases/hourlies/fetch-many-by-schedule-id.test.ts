@@ -40,8 +40,6 @@ describe('Fetch many hourlies by schedule id use case', () => {
 
     const { hourlies } = await sut.execute({ scheduleId: schedule.id })
 
-    console.log('Hourlies criados automaticamente:', hourlies)
-
     // Com intervalo de 60 minutos, de 09:00 às 18:00, devem ser criados 9 hourlies
     // 09:00, 10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00, 17:00
     expect(hourlies).toHaveLength(9)

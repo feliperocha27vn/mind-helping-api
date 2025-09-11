@@ -1,5 +1,5 @@
 import { NotExistingGoalsRegisteredError } from '@/errors/not-existing-goals-registred'
-import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { GoalRepository } from '@/repositories/goal-repository'
 import type { PersonRepository } from '@/repositories/person-repository'
 import type { Goal } from '@prisma/client'
@@ -24,7 +24,7 @@ export class FetchManyGoalsUseCase {
     const person = await this.personRepository.findById(personId)
 
     if (!person) {
-      throw new ResourceNotFoundError()
+      throw new PersonNotFoundError()
     }
 
     const goals = await this.goalRepository.fetchManyGoals(personId)

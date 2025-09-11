@@ -1,3 +1,4 @@
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
 import type { GoalRepository } from '@/repositories/goal-repository'
 import type { PersonRepository } from '@/repositories/person-repository'
@@ -17,7 +18,7 @@ export class DeleteGoalUseCase {
     const person = await this.personRepository.findById(personId)
 
     if (!person) {
-      throw new ResourceNotFoundError()
+      throw new PersonNotFoundError()
     }
 
     const goal = await this.goalRepository.findById(goalId)

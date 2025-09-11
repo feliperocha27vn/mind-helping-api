@@ -11,8 +11,9 @@ afterAll(async () => {
   await app.close()
 })
 
-describe('Create goal', () => {
-  it('should be able to create a goal', async () => {
+describe('Delete goal', () => {
+  it('should be able to delete a goal', async () => {
+    // Primeiro criar a Person
     const person = await prisma.person.create({
       data: {
         name: 'Ana Clara Oliveira',
@@ -31,6 +32,7 @@ describe('Create goal', () => {
       },
     })
 
+    // Depois criar o User vinculado à Person
     const user = await prisma.user.create({
       data: {
         person_id: person.id,
@@ -38,12 +40,25 @@ describe('Create goal', () => {
       },
     })
 
-    const reply = await request(app.server).post('/goal').send({
-      userPersonId: user.person_id,
-      description: 'New Goal',
-      numberDays: 5,
+    const goal = await prisma.goal.create({
+      data: {
+        userPersonId: user.person_id, // Usar o person_id do User
+        description: 'New Goal',
+        numberDays: 5,
+      },
     })
 
-    expect(reply.statusCode).toEqual(201)
+    const reply = await request(app.server).delete(
+      `/goal/${goal.id}/${user.person_id}`
+    )
+    expect(reply.statusCode).toEqual(204)
+  })
+
+  it('should not be able to delete a non-existing goal', async () => {
+    const reply = await request(app.server).delete(
+      `/goal/c8654792-f288-4f14-a15c-74b2abb6bf2e/86ca1c65-544f-4200-be12-9df5125f607b`
+    )
+
+    expect(reply.statusCode).toEqual(404)
   })
 })
