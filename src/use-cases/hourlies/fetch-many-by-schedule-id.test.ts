@@ -3,7 +3,7 @@ import { InMemoryScheduleRepository } from '@/in-memory-repository/in-memory-sch
 import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
 import { CreateScheduleUseCase } from '@/use-cases/schedule/create'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { FetchManyHourliesByScheduleIdUseCase } from './fetch-many-by-schedule-id'
 
 let hourlyRepository: HourlyRepository
@@ -23,9 +23,16 @@ describe('Fetch many hourlies by schedule id use case', () => {
       hourlyRepository,
       scheduleRepository
     )
+
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   it('should be able to fetch many hourlies by schedule id', async () => {
+    vi.setSystemTime(new Date('2024-12-01T10:00:00'))
     // Usa o CreateScheduleUseCase para criar o schedule E os hourlies automaticamente
     const { schedule } = await createScheduleUseCase.execute({
       professionalPersonId: 'professional-1',

@@ -47,6 +47,10 @@ export class CreateScheduleUseCase {
     if (schedule.isControlled) {
       const dateIsValid = isValid(initialTime) && isValid(endTime)
 
+      if (initialTime < new Date()) {
+        throw new DateNotValidError()
+      }
+
       if (!dateIsValid) {
         throw new DateNotValidError()
       }
