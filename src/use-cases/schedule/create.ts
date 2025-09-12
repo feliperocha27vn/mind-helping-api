@@ -44,12 +44,12 @@ export class CreateScheduleUseCase {
       isControlled,
     })
 
-    if (schedule.isControlled) {
-      const dateIsValid = isValid(initialTime) && isValid(endTime)
-
       if (initialTime < new Date()) {
         throw new DateNotValidError()
       }
+
+    if (schedule.isControlled) {
+      const dateIsValid = isValid(initialTime) && isValid(endTime)
 
       if (!dateIsValid) {
         throw new DateNotValidError()
