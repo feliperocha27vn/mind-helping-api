@@ -12,6 +12,7 @@ export class InMemoryGoalRepository implements GoalRepository {
       numberDays: data.numberDays,
       isExecuted: data.isExecuted ?? false,
       isExpire: data.isExpire ?? false,
+      counter: data.counter ?? 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -127,5 +128,19 @@ export class InMemoryGoalRepository implements GoalRepository {
     )
 
     return goalsPerson
+  }
+
+  async addCounter(goalId: string, personId: string) {
+    const goal = this.goals.find(
+      goal => goal.id === goalId && goal.userPersonId === personId
+    )
+
+    if (!goal) {
+      return null
+    }
+
+    goal.counter += 1
+
+    return goal
   }
 }

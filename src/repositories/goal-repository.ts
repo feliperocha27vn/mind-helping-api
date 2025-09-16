@@ -12,4 +12,5 @@ export interface GoalRepository {
   ): Promise<Goal | null>
   delete(goalId: string, personId: string): void
   fetchManyGoals(personId: string): Promise<Goal[] | null>
+  addCounter(goalId: string, personId: string): Promise<Goal | null>
 }

@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify'
+import { addCounter } from './add-counter'
 import { create } from './create'
 import { deleteGoal } from './delete'
 import { executeGoal } from './execute-goal'
@@ -11,4 +12,5 @@ export function routesGoal(app: FastifyInstance) {
   app.register(executeGoal)
   app.register(fechMany)
   app.register(update)
+  app.register(addCounter)
 }

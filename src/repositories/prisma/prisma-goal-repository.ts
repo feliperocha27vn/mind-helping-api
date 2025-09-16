@@ -80,4 +80,20 @@ export class PrismaGoalRepository implements GoalRepository {
       },
     })
   }
+
+  async addCounter(goalId: string, personId: string) {
+    const goal = await prisma.goal.update({
+      where: {
+        id: goalId,
+        userPersonId: personId,
+      },
+      data: {
+        counter: {
+          increment: 1,
+        },
+      },
+    })
+
+    return goal
+  }
 }
