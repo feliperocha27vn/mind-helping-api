@@ -9,6 +9,7 @@ export interface ProfessionalWithPerson {
   neighborhood: string
   city: string
   uf: string
+  voluntary: boolean
 }
 
 export interface ProfessionalRepository {

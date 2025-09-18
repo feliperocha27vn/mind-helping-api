@@ -13,8 +13,10 @@ let sut: RegisterProfessionalUseCase
 
 describe('Register professional use case', () => {
   beforeEach(() => {
-    professionalRepository = new InMemoryProfessionalRepository()
     personRepository = new InMemoryPersonRepository()
+    professionalRepository = new InMemoryProfessionalRepository(
+      personRepository as InMemoryPersonRepository
+    )
     sut = new RegisterProfessionalUseCase(
       professionalRepository,
       personRepository

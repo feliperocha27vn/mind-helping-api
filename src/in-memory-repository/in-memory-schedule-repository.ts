@@ -35,4 +35,16 @@ export class InMemoryScheduleRepository implements ScheduleRepository {
 
     return schedule
   }
+
+  async fetchMany(professionalPersonId: string) {
+    const schedules = this.items.filter(
+      item => item.professionalPersonId === professionalPersonId
+    )
+
+    if (!schedules) {
+      return null
+    }
+
+    return schedules
+  }
 }

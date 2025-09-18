@@ -1,5 +1,7 @@
 import { DateNotValidError } from '@/errors/date-not-valid'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { HourlyRepository } from '@/repositories/hourly-repository'
+import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
 import type { Schedule } from '@prisma/client'
 import { isValid } from 'date-fns'
@@ -22,7 +24,8 @@ interface CreateScheduleUseCaseReply {
 export class CreateScheduleUseCase {
   constructor(
     private scheduleRepository: ScheduleRepository,
-    private hourlyRepository: HourlyRepository
+    private hourlyRepository: HourlyRepository,
+    private professionalRepository: ProfessionalRepository
   ) {}
 
   async execute({
@@ -35,9 +38,18 @@ export class CreateScheduleUseCase {
     isControlled,
     observation,
   }: CreateScheduleUseCaseRequest): Promise<CreateScheduleUseCaseReply> {
+    const professionalPerson =
+      await this.professionalRepository.getById(professionalPersonId)
+
+    if (!professionalPerson) {
+      throw new PersonNotFoundError()
+    }
+
+    const finalAverageValue = professionalPerson.voluntary ? 0 : averageValue
+
     const schedule = await this.scheduleRepository.create({
       professionalPersonId,
-      averageValue,
+      averageValue: finalAverageValue,
       cancellationPolicy,
       observation,
       interval,

@@ -1,12 +1,14 @@
 import type { Person, Prisma, Professional } from '@prisma/client'
-import type { PersonRepository } from '../repositories/person-repository'
 import type { ProfessionalRepository } from '../repositories/professional-repository'
 import type { InMemoryPersonRepository } from './in-memory-person-repository'
 
 export class InMemoryProfessionalRepository implements ProfessionalRepository {
   public items: Professional[] = []
+  public personRepository: InMemoryPersonRepository
 
-  constructor(private personRepository?: PersonRepository) {}
+  constructor(personRepository: InMemoryPersonRepository) {
+    this.personRepository = personRepository
+  }
 
   async create(data: Prisma.ProfessionalUncheckedCreateInput) {
     const professional = {
@@ -21,31 +23,23 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
   }
 
   async fetchMany(search: string) {
-    if (!this.personRepository) {
-      throw new Error('PersonRepository not provided')
-    }
-
-    // Acessa o array items do InMemoryPersonRepository
-    const allPersons =
-      (this.personRepository as InMemoryPersonRepository).items || []
-
-    const persons = allPersons.filter((person: Person) =>
-      person.name.toLowerCase().includes(search.toLowerCase())
+    // Filtra as pessoas que correspondem à busca
+    const filteredPersons = this.personRepository.items.filter(
+      (person: Person) =>
+        person.name.toLowerCase().includes(search.toLowerCase())
     )
 
-    const professionalWithPerson = this.items.filter(professional =>
-      persons.some((person: Person) => person.id === professional.person_id)
-    )
-
-    const professionals = professionalWithPerson
+    // Busca os profissionais que correspondem às pessoas filtradas e retorna os dados combinados
+    const professionals = this.items
+      .filter(professional =>
+        filteredPersons.some(person => person.id === professional.person_id)
+      )
       .map(professional => {
-        const person = persons.find(
-          (person: Person) => person.id === professional.person_id
+        const person = filteredPersons.find(
+          person => person.id === professional.person_id
         )
 
-        if (!person) {
-          return null
-        }
+        if (!person) return null
 
         return {
           id: person.id,
@@ -56,6 +50,7 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
           neighborhood: person.neighborhood,
           city: person.city,
           uf: person.uf,
+          voluntary: professional.voluntary,
         }
       })
       .filter((item): item is NonNullable<typeof item> => item !== null)
@@ -72,9 +67,9 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
       return null
     }
 
-    const person = (
-      this.personRepository as InMemoryPersonRepository
-    ).items.find(person => person.id === professional.person_id)
+    const person = this.personRepository.items.find(
+      person => person.id === professional.person_id
+    )
 
     if (!person) {
       return null
@@ -89,6 +84,7 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
       neighborhood: person.neighborhood,
       city: person.city,
       uf: person.uf,
+      voluntary: professional.voluntary,
     }
   }
 }
