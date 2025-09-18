@@ -1,8 +1,8 @@
 import { DateNotValidError } from '@/errors/date-not-valid'
 import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
-import type { Prisma, Schedule } from '@prisma/client'
-import { addMinutes, format, isBefore, isValid } from 'date-fns'
+import type { Schedule } from '@prisma/client'
+import { isValid } from 'date-fns'
 
 interface CreateScheduleUseCaseRequest {
   professionalPersonId: string
@@ -44,9 +44,9 @@ export class CreateScheduleUseCase {
       isControlled,
     })
 
-      if (initialTime < new Date()) {
-        throw new DateNotValidError()
-      }
+    if (initialTime < new Date()) {
+      throw new DateNotValidError()
+    }
 
     if (schedule.isControlled) {
       const dateIsValid = isValid(initialTime) && isValid(endTime)
@@ -55,23 +55,13 @@ export class CreateScheduleUseCase {
         throw new DateNotValidError()
       }
 
-      const hourlies: Prisma.HourlyUncheckedCreateInput[] = []
-      let currentTime = new Date(initialTime) // Cria uma cópia para não modificar o original
-
-      while (isBefore(currentTime, endTime)) {
-        hourlies.push({
-          date: new Date(currentTime),
-          hour: format(currentTime, 'HH:mm'),
-          scheduleId: schedule.id,
-        })
-
-        // Incrementa o tempo pelo intervalo especificado
-        currentTime = addMinutes(currentTime, interval)
-      }
-
-      if (hourlies.length > 0) {
-        await this.hourlyRepository.createMany(hourlies)
-      }
+      // Usa o método do repositório para criar os horários
+      await this.hourlyRepository.createHourlySlots(
+        schedule.id,
+        initialTime,
+        endTime,
+        interval
+      )
     }
 
     return { schedule }
