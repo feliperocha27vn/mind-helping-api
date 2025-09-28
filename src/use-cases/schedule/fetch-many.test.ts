@@ -1,3 +1,5 @@
+import { NotExistingSchedulesError } from '@/errors/not-existing-schedules'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
 import { InMemoryScheduleRepository } from '@/in-memory-repository/in-memory-schedule-repository'
@@ -29,8 +31,6 @@ describe('Fetch schedules use case', () => {
   })
 
   it('should be able to fetch schedules', async () => {
-    vi.setSystemTime(new Date('2024-12-01T10:00:00'))
-
     const person = await personRepository.create({
       name: 'Maria Silva Santos',
       birth_date: '1985-03-15',
@@ -70,5 +70,43 @@ describe('Fetch schedules use case', () => {
     })
 
     expect(schedules).toHaveLength(1)
+  })
+
+  it('should not be able to fetch schedules, if professional does not exist', async () => {
+    expect(() =>
+      sut.execute({
+        professionalId: 'non-existing-professional-id',
+      })
+    ).rejects.toThrow(PersonNotFoundError)
+  })
+
+  it('should not be able to fetch schedules, if schedule does not exist', async () => {
+    const person = await personRepository.create({
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const professinal = await professionalRepository.create({
+      crp: '06/12345',
+      person_id: person.id,
+      voluntary: false,
+    })
+
+    expect(() =>
+      sut.execute({
+        professionalId: professinal.person_id,
+      })
+    ).rejects.toThrow(NotExistingSchedulesError)
   })
 })

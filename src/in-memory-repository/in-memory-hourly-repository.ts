@@ -10,7 +10,7 @@ export class InMemoryHourlyRepository implements HourlyRepository {
     const hourlies = data.map(item => {
       const hourly = {
         id: item.id ?? randomUUID(),
-        scheduleId: item.scheduleId ?? randomUUID(),
+        scheduleId: item.scheduleId,
         date: new Date(item.date ?? new Date()),
         hour: item.hour,
         isOcuped: item.isOcuped ?? false,
@@ -35,25 +35,33 @@ export class InMemoryHourlyRepository implements HourlyRepository {
     initialTime: Date,
     endTime: Date,
     interval: number
-  ): Promise<Hourly[]> {
-    const createdHourlies: Hourly[] = []
+  ) {
+    const slotsData: Hourly[] = []
     let currentTime = new Date(initialTime)
 
     while (isBefore(currentTime, endTime)) {
-      const hourly = {
+      slotsData.push({
         id: randomUUID(),
         isOcuped: false,
         date: new Date(currentTime),
         hour: format(currentTime, 'HH:mm'),
         scheduleId,
-      }
-
-      this.items.push(hourly)
-      createdHourlies.push(hourly)
-
+      })
       currentTime = addMinutes(currentTime, interval)
     }
 
-    return createdHourlies
+    return this.createMany(slotsData)
+  }
+
+  async getHourlyByDateAndHour(date: Date, hour: string) {
+    const hourly = this.items.find(
+      item => item.date.getTime() === date.getTime() && item.hour === hour
+    )
+
+    if (!hourly) {
+      return null
+    }
+
+    return hourly
   }
 }

@@ -9,4 +9,5 @@ export interface HourlyRepository {
     endTime: Date,
     interval: number
   ): Promise<Hourly[]>
+  getHourlyByDateAndHour(date: Date, hour: string): Promise<Hourly | null>
 }

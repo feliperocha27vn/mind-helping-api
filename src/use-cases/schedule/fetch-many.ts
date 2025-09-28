@@ -34,6 +34,10 @@ export class FetchManySchedulesUseCase {
       throw new NotExistingSchedulesError()
     }
 
+    if (schedules.length === 0) {
+      throw new NotExistingSchedulesError()
+    }
+
     return { schedules }
   }
 }
