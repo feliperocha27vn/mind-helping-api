@@ -62,6 +62,7 @@ export class PrismaProfessionalRepository implements ProfessionalRepository {
       neighborhood: professional.person.neighborhood,
       city: professional.person.city,
       uf: professional.person.uf,
+      voluntary: professional.voluntary,
     }
   }
 }
