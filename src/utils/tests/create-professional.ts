@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
 
-export async function createProfessionalAndSchedule() {
+export async function createProfessional() {
   const person = await prisma.person.create({
     data: {
       name: 'Ana Clara Oliveira',
@@ -28,18 +28,5 @@ export async function createProfessionalAndSchedule() {
     },
   })
 
-  const schedule = await prisma.schedule.create({
-    data: {
-      professionalPersonId: professional.person_id,
-      averageValue: 150,
-      isControlled: true,
-      cancellationPolicy: 24,
-      initialTime: new Date('2024-12-31T09:00:00'),
-      endTime: new Date('2024-12-31T18:00:00'),
-      interval: 60,
-      observation: 'Atendimento presencial',
-    },
-  })
-
-  return { schedule, professional }
+  return { professional }
 }

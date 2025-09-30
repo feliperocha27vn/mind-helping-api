@@ -15,14 +15,12 @@ afterAll(async () => {
 describe('Fetch hourlies by schedule ID', () => {
   it('should be able to fetch hourlies by schedule ID', async () => {
     const { schedule } = await createProfessionalAndSchedule()
-    const { hourlies } = await createHourlies(
+    await createHourlies(
       schedule.id,
       schedule.initialTime || new Date(),
       schedule.endTime || new Date(),
       schedule.interval || 60
     )
-
-    console.log(hourlies)
 
     const reply = await request(app.server)
       .get(`/hourlies/${schedule.id}`)
