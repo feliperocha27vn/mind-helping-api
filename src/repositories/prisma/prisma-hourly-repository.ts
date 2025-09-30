@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { Hourly, Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { addMinutes, format, isBefore } from 'date-fns'
 import { randomUUID } from 'node:crypto'
 import type { HourlyRepository } from '../hourly-repository'
@@ -25,7 +25,7 @@ export class PrismaHourlyRepository implements HourlyRepository {
     endTime: Date,
     interval: number
   ) {
-    const slotsData: Hourly[] = []
+    const slotsData = []
     let currentTime = new Date(initialTime)
 
     while (isBefore(currentTime, endTime)) {
