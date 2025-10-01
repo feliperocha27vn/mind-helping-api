@@ -13,6 +13,7 @@ import { hourliesRoutes } from './http/controllers/hourlies/routes'
 import { personRoutes } from './http/controllers/person/routes'
 import { routesProfessional } from './http/controllers/professional/routes'
 import { scheduleRoutes } from './http/controllers/schedule/routes'
+import { schedulingRoutes } from './http/controllers/scheduling/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -42,3 +43,4 @@ app.register(routesProfessional)
 app.register(routesGoal)
 app.register(hourliesRoutes)
 app.register(scheduleRoutes)
+app.register(schedulingRoutes)

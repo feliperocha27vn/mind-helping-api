@@ -1,3 +1,4 @@
+import { InvalidParametersError } from '@/errors/invalid-parameters'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
 import type { HourlyRepository } from '@/repositories/hourly-repository'
@@ -5,6 +6,7 @@ import type { ProfessionalRepository } from '@/repositories/professional-reposit
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
 import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import type { UserRepository } from '@/repositories/user-repository'
+import { validateDateTime } from '@/utils/validate-date-time'
 import type { Scheduling } from '@prisma/client'
 
 interface CreateSchedulingUseCaseRequest {
@@ -12,7 +14,7 @@ interface CreateSchedulingUseCaseRequest {
   userPersonId: string
   scheduleId: string
   hour: string
-  date: Date
+  date: string
 }
 
 interface CreateSchedulingUseCaseResponse {
@@ -54,8 +56,17 @@ export class CreateSchedulingUseCase {
       throw new ResourceNotFoundError()
     }
 
+    // Valida e normaliza a data e hora
+    const validation = validateDateTime(date, hour)
+
+    if (!validation.isValid || !validation.dateTimeObj) {
+      throw new InvalidParametersError()
+    }
+
+    const { dateTimeObj } = validation
+
     const hourly = await this.hourlyRepository.getHourlyByDateAndHour(
-      date,
+      dateTimeObj,
       hour
     )
 

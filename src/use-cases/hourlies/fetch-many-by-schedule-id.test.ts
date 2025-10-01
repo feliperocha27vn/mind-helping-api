@@ -73,8 +73,8 @@ describe('Fetch many hourlies by schedule id use case', () => {
       professionalPersonId: 'professional-1',
       averageValue: 150,
       cancellationPolicy: 24,
-      initialTime: new Date('2024-12-31T09:00:00'),
-      endTime: new Date('2024-12-31T18:00:00'),
+      initialTime: new Date('2024-12-31T09:00:00.000Z'),
+      endTime: new Date('2024-12-31T18:00:00.000Z'),
       interval: 60,
       isControlled: true, // Importante: true para criar os hourlies automaticamente
       observation: 'Atendimento presencial',

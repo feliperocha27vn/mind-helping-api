@@ -93,8 +93,8 @@ describe('Create scheduling use case', () => {
       professionalPersonId: professional.person_id,
       averageValue: 150,
       cancellationPolicy: 24,
-      initialTime: new Date('2024-12-31T09:00:00'),
-      endTime: new Date('2024-12-31T18:00:00'),
+      initialTime: new Date('2024-12-31T09:00:00.000Z'),
+      endTime: new Date('2024-12-31T18:00:00.000Z'),
       interval: 60,
       isControlled: true,
       observation: 'Atendimento presencial',
@@ -111,7 +111,7 @@ describe('Create scheduling use case', () => {
       professionalPersonId: professional.person_id,
       userPersonId: user.person_id,
       scheduleId: schedule.id,
-      date: new Date('2024-12-31T10:00:00'),
+      date: '2024-12-31',
       hour: '10:00',
     })
 
