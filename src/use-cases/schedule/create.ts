@@ -8,17 +8,25 @@ import { isValid } from 'date-fns'
 
 interface CreateScheduleUseCaseRequest {
   professionalPersonId: string
-  initialTime: Date
-  endTime: Date
-  interval: number
-  cancellationPolicy: number
-  averageValue: number
-  observation: string
-  isControlled: boolean
+  schedules: Array<{
+    initialTime: Date
+    endTime: Date
+    interval: number
+    cancellationPolicy: number
+    averageValue: number
+    observation: string
+    isControlled: boolean
+  }>
 }
 
 interface CreateScheduleUseCaseReply {
-  schedule: Schedule
+  schedule: Schedule[]
+}
+
+// Função para ajustar a data ao fuso horário local antes de salvar
+function adjustToLocalTimezone(date: Date): Date {
+  const offset = date.getTimezoneOffset() * 60000 // converte minutos para milissegundos
+  return new Date(date.getTime() - offset)
 }
 
 export class CreateScheduleUseCase {
@@ -30,13 +38,7 @@ export class CreateScheduleUseCase {
 
   async execute({
     professionalPersonId,
-    averageValue,
-    cancellationPolicy,
-    endTime,
-    initialTime,
-    interval,
-    isControlled,
-    observation,
+    schedules,
   }: CreateScheduleUseCaseRequest): Promise<CreateScheduleUseCaseReply> {
     const professionalPerson =
       await this.professionalRepository.getById(professionalPersonId)
@@ -45,37 +47,62 @@ export class CreateScheduleUseCase {
       throw new PersonNotFoundError()
     }
 
-    const finalAverageValue = professionalPerson.voluntary ? 0 : averageValue
+    const createdSchedules = await Promise.all(
+      schedules.map(async scheduleItem => {
+        const {
+          initialTime,
+          endTime,
+          interval,
+          cancellationPolicy,
+          averageValue,
+          observation,
+          isControlled,
+        } = scheduleItem
 
-    const schedule = await this.scheduleRepository.create({
-      professionalPersonId,
-      averageValue: finalAverageValue,
-      cancellationPolicy,
-      observation,
-      interval,
-      isControlled,
-    })
+        const finalAverageValue = professionalPerson.voluntary
+          ? 0
+          : averageValue
 
-    if (initialTime < new Date()) {
-      throw new DateNotValidError()
-    }
+        // Ajusta as datas para o fuso horário local antes de salvar
+        const adjustedInitialTime = adjustToLocalTimezone(initialTime)
+        const adjustedEndTime = adjustToLocalTimezone(endTime)
 
-    if (schedule.isControlled) {
-      const dateIsValid = isValid(initialTime) && isValid(endTime)
+        const schedule = await this.scheduleRepository.create({
+          professionalPersonId,
+          averageValue: finalAverageValue,
+          cancellationPolicy,
+          observation,
+          interval,
+          isControlled,
+          initialTime: adjustedInitialTime,
+          endTime: adjustedEndTime,
+        })
 
-      if (!dateIsValid) {
-        throw new DateNotValidError()
-      }
+        if (scheduleItem.initialTime < new Date()) {
+          throw new DateNotValidError()
+        }
 
-      // Usa o método do repositório para criar os horários
-      await this.hourlyRepository.createHourlySlots(
-        schedule.id,
-        initialTime,
-        endTime,
-        interval
-      )
-    }
+        if (schedule.isControlled) {
+          const dateIsValid =
+            isValid(scheduleItem.initialTime) && isValid(scheduleItem.endTime)
 
-    return { schedule }
+          if (!dateIsValid) {
+            throw new DateNotValidError()
+          }
+
+          // Usa o método do repositório para criar os horários (usa as datas ajustadas)
+          await this.hourlyRepository.createHourlySlots(
+            schedule.id,
+            adjustedInitialTime,
+            adjustedEndTime,
+            scheduleItem.interval
+          )
+        }
+
+        return schedule
+      })
+    )
+
+    return { schedule: createdSchedules }
   }
 }

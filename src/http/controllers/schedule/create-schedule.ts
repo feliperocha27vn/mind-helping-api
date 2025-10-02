@@ -8,6 +8,7 @@ export const createSchedule: FastifyPluginAsyncZod = async app => {
     '/schedules/:professionalPersonId',
     {
       schema: {
+        tags: ['Schedules'],
         params: z.object({
           professionalPersonId: z.uuid(),
         }),
@@ -44,13 +45,17 @@ export const createSchedule: FastifyPluginAsyncZod = async app => {
       try {
         await createScheduleUseCase.execute({
           professionalPersonId,
-          initialTime,
-          endTime,
-          interval,
-          cancellationPolicy,
-          averageValue,
-          observation,
-          isControlled,
+          schedules: [
+            {
+              initialTime,
+              endTime,
+              interval,
+              cancellationPolicy,
+              averageValue,
+              observation,
+              isControlled,
+            },
+          ],
         })
 
         return reply.status(201).send()
