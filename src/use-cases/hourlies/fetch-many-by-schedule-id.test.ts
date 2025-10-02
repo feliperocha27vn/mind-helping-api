@@ -71,21 +71,25 @@ describe('Fetch many hourlies by schedule id use case', () => {
     // Usa o CreateScheduleUseCase para criar o schedule E os hourlies automaticamente
     const { schedule } = await createScheduleUseCase.execute({
       professionalPersonId: 'professional-1',
-      averageValue: 150,
-      cancellationPolicy: 24,
-      initialTime: new Date('2024-12-31T09:00:00.000Z'),
-      endTime: new Date('2024-12-31T18:00:00.000Z'),
-      interval: 60,
-      isControlled: true, // Importante: true para criar os hourlies automaticamente
-      observation: 'Atendimento presencial',
+      schedules: [
+        {
+          averageValue: 150,
+          cancellationPolicy: 24,
+          initialTime: new Date('2024-12-31T09:00:00.000Z'),
+          endTime: new Date('2024-12-31T18:00:00.000Z'),
+          interval: 60,
+          isControlled: true, // Importante: true para criar os hourlies automaticamente
+          observation: 'Atendimento presencial',
+        },
+      ],
     })
 
-    const { hourlies } = await sut.execute({ scheduleId: schedule.id })
+    const { hourlies } = await sut.execute({ scheduleId: schedule[0].id })
 
-    // Com intervalo de 60 minutos, de 09:00 às 18:00, devem ser criados 9 hourlies
+    // Com intervalo de 60 minutos, de 09:00 às 18:00 UTC, devem ser criados 9 hourlies
     // 09:00, 10:00, 11:00, 12:00, 13:00, 14:00, 15:00, 16:00, 17:00
     expect(hourlies).toHaveLength(9)
-    expect(hourlies[0].scheduleId).toBe(schedule.id)
+    expect(hourlies[0].scheduleId).toBe(schedule[0].id)
     expect(hourlies[0].hour).toBe('09:00')
     expect(hourlies[8].hour).toBe('17:00')
   })

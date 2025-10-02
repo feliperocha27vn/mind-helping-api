@@ -1,4 +1,4 @@
-import { format, isValid, parse, parseISO } from 'date-fns'
+import { isValid, parse, parseISO } from 'date-fns'
 
 interface ValidateDateTimeResult {
   isValid: boolean
@@ -30,8 +30,12 @@ export function validateDateTime(
   let dateObj: Date
 
   // 1. Tenta parsear a data em diferentes formatos
-  // Formato ISO (2024-12-31)
-  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+  // Formato ISO completo com timezone (2024-12-31T10:00:00.000Z ou 2024-12-31T10:00:00-03:00)
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(date)) {
+    dateObj = new Date(date)
+  }
+  // Formato ISO apenas data (2024-12-31)
+  else if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     dateObj = parseISO(date)
   }
   // Formato brasileiro (31/12/2024)
@@ -42,12 +46,16 @@ export function validateDateTime(
   else if (/^\d{2}-\d{2}-\d{4}$/.test(date)) {
     dateObj = parse(date, 'MM-dd-yyyy', new Date())
   }
+  // Formato timestamp Unix (número)
+  else if (/^\d+$/.test(date)) {
+    dateObj = new Date(Number.parseInt(date))
+  }
   // Formato não reconhecido
   else {
     return {
       isValid: false,
       error:
-        'Invalid date format. Expected: YYYY-MM-DD, DD/MM/YYYY, or MM-DD-YYYY',
+        'Invalid date format. Expected: YYYY-MM-DD, DD/MM/YYYY, MM-DD-YYYY, ISO 8601, or Unix timestamp',
     }
   }
 
@@ -79,8 +87,14 @@ export function validateDateTime(
     }
   }
 
-  // 6. Combina data + hora em UTC
-  const dateTimeString = `${format(dateObj, 'yyyy-MM-dd')}T${hourNormalized}:00.000Z`
+  // 6. Extrai apenas a data (ano, mês, dia) em UTC da dateObj
+  // Isso garante que qualquer timezone da data original seja normalizado para UTC
+  const year = dateObj.getUTCFullYear()
+  const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0')
+  const day = String(dateObj.getUTCDate()).padStart(2, '0')
+
+  // 7. Combina data + hora sempre em UTC com .000Z no final
+  const dateTimeString = `${year}-${month}-${day}T${hourNormalized}:00.000Z`
   const dateTimeObj = new Date(dateTimeString)
 
   return {

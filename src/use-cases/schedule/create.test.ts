@@ -82,12 +82,10 @@ describe('Create schedule use case', () => {
       ],
     })
 
-    console.log(schedule)
-
     expect(schedule).toEqual(expect.any(Array))
   })
 
-  it.skip('should not be able to create a new schedule with initial time before the current date', async () => {
+  it('should not be able to create a new schedule with initial time before the current date', async () => {
     vi.setSystemTime(new Date('2024-12-01T10:00:00'))
 
     const person = await personRepository.create({
@@ -115,18 +113,22 @@ describe('Create schedule use case', () => {
     await expect(() =>
       sut.execute({
         professionalPersonId: person.id,
-        averageValue: 150,
-        cancellationPolicy: 24,
-        initialTime: new Date('2024-11-30T09:00:00'),
-        endTime: new Date('2024-11-30T18:00:00'),
-        interval: 60,
-        isControlled: true,
-        observation: 'Atendimento presencial',
+        schedules: [
+          {
+            averageValue: 150,
+            cancellationPolicy: 24,
+            initialTime: new Date('2024-11-30T09:00:00'),
+            endTime: new Date('2024-11-30T18:00:00'),
+            interval: 60,
+            isControlled: true,
+            observation: 'Atendimento presencial',
+          },
+        ],
       })
     ).rejects.toBeInstanceOf(DateNotValidError)
   })
 
-  it.skip('should be able create professional voluntary', async () => {
+  it('should be able create professional voluntary', async () => {
     vi.setSystemTime(new Date('2024-12-01T10:00:00'))
 
     const person = await personRepository.create({
@@ -153,15 +155,19 @@ describe('Create schedule use case', () => {
 
     const { schedule } = await sut.execute({
       professionalPersonId: professinal.person_id,
-      averageValue: 150,
-      cancellationPolicy: 24,
-      initialTime: new Date('2024-12-31T09:00:00'),
-      endTime: new Date('2024-12-31T18:00:00'),
-      interval: 60,
-      isControlled: true,
-      observation: 'Atendimento presencial',
+      schedules: [
+        {
+          averageValue: 150,
+          cancellationPolicy: 24,
+          initialTime: new Date('2024-12-31T09:00:00'),
+          endTime: new Date('2024-12-31T18:00:00'),
+          interval: 60,
+          isControlled: true,
+          observation: 'Atendimento presencial',
+        },
+      ],
     })
 
-    expect(schedule.averageValue.toNumber()).toEqual(0)
+    expect(schedule[0].averageValue.toNumber()).toEqual(0)
   })
 })

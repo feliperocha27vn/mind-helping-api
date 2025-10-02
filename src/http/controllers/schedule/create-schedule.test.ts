@@ -18,29 +18,48 @@ afterAll(async () => {
 
 describe('Create new schedule', () => {
   it('should be able to create new schedule', async () => {
-    vi.setSystemTime(new Date('2024-12-31T09:00:00'))
+    vi.setSystemTime(new Date('2024-11-20T09:00:00'))
 
     const { professional } = await createProfessional()
 
     const reply = await request(app.server)
       .post(`/schedules/${professional.person_id}`)
-      .send({
-        initialTime: new Date('2024-12-31T09:00:00'),
-        endTime: new Date('2024-12-31T17:00:00'),
-        interval: 60,
-        cancellationPolicy: 24,
-        averageValue: 150,
-        observation: 'Available for new clients',
-        isControlled: true,
-      })
+      .send([
+        {
+          initialTime: new Date('2024-12-01T09:00:00.000Z'),
+          endTime: new Date('2024-12-01T17:00:00.000Z'),
+          interval: 60,
+          cancellationPolicy: 24,
+          averageValue: 150,
+          observation: 'Available for new clients',
+          isControlled: true,
+        },
+        {
+          initialTime: new Date('2024-12-02T09:00:00.000Z'),
+          endTime: new Date('2024-12-02T16:00:00.000Z'),
+          interval: 60,
+          cancellationPolicy: 24,
+          averageValue: 150,
+          observation: 'Available for new clients',
+          isControlled: true,
+        },
+      ])
 
-    const createdSchedule = await prisma.schedule.findFirstOrThrow()
+    const createdSchedules = await prisma.schedule.findMany({
+      where: { professionalPersonId: professional.person_id },
+    })
 
-    const createdHourlies = await prisma.hourly.findMany({
-      where: { scheduleId: createdSchedule.id },
+    const createdHourliesFirst = await prisma.hourly.findMany({
+      where: { scheduleId: createdSchedules[0].id },
+    })
+
+    const createdHourliesSecond = await prisma.hourly.findMany({
+      where: { scheduleId: createdSchedules[1].id },
     })
 
     expect(reply.statusCode).toEqual(201)
-    expect(createdHourlies).toHaveLength(8)
+    expect(createdSchedules).toHaveLength(2) // Deve criar 2 schedules
+    expect(createdHourliesFirst).toHaveLength(8) // 09:00 até 16:00 com intervalo de 60min = 8 slots (09,10,11,12,13,14,15,16)
+    expect(createdHourliesSecond).toHaveLength(7) // 09:00 até 16:00 com intervalo de 60min = 7 slots (09,10,11,12,13,14,15)
   })
 })

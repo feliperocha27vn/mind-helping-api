@@ -12,15 +12,17 @@ export const createSchedule: FastifyPluginAsyncZod = async app => {
         params: z.object({
           professionalPersonId: z.uuid(),
         }),
-        body: z.object({
-          initialTime: z.coerce.date(),
-          endTime: z.coerce.date(),
-          interval: z.number(),
-          cancellationPolicy: z.number(),
-          averageValue: z.number(),
-          observation: z.string().max(500),
-          isControlled: z.boolean(),
-        }),
+        body: z
+          .object({
+            initialTime: z.coerce.date(),
+            endTime: z.coerce.date(),
+            interval: z.number(),
+            cancellationPolicy: z.number(),
+            averageValue: z.number(),
+            observation: z.string().max(500),
+            isControlled: z.boolean(),
+          })
+          .array(),
         response: {
           201: z.void(),
           400: z.object({ message: z.string() }),
@@ -30,32 +32,14 @@ export const createSchedule: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const { professionalPersonId } = request.params
-      const {
-        initialTime,
-        endTime,
-        interval,
-        cancellationPolicy,
-        averageValue,
-        observation,
-        isControlled,
-      } = request.body
+      const schedules = request.body
 
       const createScheduleUseCase = makeCreateScheduleUseCase()
 
       try {
         await createScheduleUseCase.execute({
           professionalPersonId,
-          schedules: [
-            {
-              initialTime,
-              endTime,
-              interval,
-              cancellationPolicy,
-              averageValue,
-              observation,
-              isControlled,
-            },
-          ],
+          schedules,
         })
 
         return reply.status(201).send()
