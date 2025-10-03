@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum FeelingsType {
+  TRISTE
+  ANSIOSO
+  TEDIO
+  RAIVA
+  NÃO_SEI_DIZER
+  FELIZ
+}
+
 model Person {
   id            String   @id @default(uuid())
   name          String
@@ -45,10 +54,11 @@ model User {
   person    Person @relation(fields: [person_id], references: [id])
   person_id String @id
 
-  gender     String
-  Goal       Goal[]
-  Daily      Daily[]
-  Scheduling Scheduling[]
+  gender       String
+  Goal         Goal[]
+  Daily        Daily[]
+  Scheduling   Scheduling[]
+  FeelingsUser FeelingsUser[]
 
   @@map("user")
 }
@@ -123,4 +133,18 @@ model Hourly {
   Scheduling Scheduling[]
 
   @@map("hourly")
+}
+
+model FeelingsUser {
+  id          String       @id @default(uuid())
+  description FeelingsType @map("description")
+  motive      String?
+
+  user         User   @relation(fields: [userPersonId], references: [person_id])
+  userPersonId String @map("user_person_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("feelings_user")
 }

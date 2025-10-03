@@ -11,6 +11,8 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
       hourlyId: data.hourlyId,
       professionalPersonId: data.professionalPersonId,
       userPersonId: data.userPersonId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
 
     this.items.push(scheduling)
