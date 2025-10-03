@@ -17,4 +17,16 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
     return scheduling
   }
+
+  async getByUserId(userId: string) {
+    const schedulings = this.items.filter(item => item.userPersonId === userId)
+
+    const scheduling = schedulings[schedulings.length - 1] ?? null
+
+    if (!scheduling) {
+      return null
+    }
+
+    return scheduling
+  }
 }

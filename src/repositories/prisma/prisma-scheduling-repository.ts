@@ -10,4 +10,13 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
     return scheduling
   }
+
+  async getByUserId(userId: string) {
+    const scheduling = await prisma.scheduling.findFirst({
+      where: { userPersonId: userId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    return scheduling
+  }
 }

@@ -4,7 +4,7 @@ import { hash } from 'bcryptjs'
 export async function createProfessionalAndSchedule() {
   const person = await prisma.person.create({
     data: {
-      name: 'Ana Clara Oliveira',
+      name: 'Dr. Ana Clara Oliveira',
       birth_date: new Date('1992-08-25'),
       cpf: '123.456.789-00',
       address: 'Avenida Brasil',
