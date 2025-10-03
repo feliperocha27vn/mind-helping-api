@@ -115,6 +115,9 @@ describe('Create scheduling use case', () => {
       hour: '10:00',
     })
 
+    const hourly = await hourlyRepository.getById(scheduling.hourlyId)
+
     expect(scheduling.id).toEqual(expect.any(String))
+    expect(hourly?.isOcuped).toBe(true)
   })
 })

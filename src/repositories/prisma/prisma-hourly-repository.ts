@@ -66,4 +66,27 @@ export class PrismaHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async updateStatusOcuped(hourlyId: string) {
+    const hourly = await prisma.hourly.update({
+      where: {
+        id: hourlyId,
+      },
+      data: {
+        isOcuped: true,
+      },
+    })
+
+    return hourly
+  }
+
+  async getById(id: string) {
+    const hourly = await prisma.hourly.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    return hourly
+  }
 }

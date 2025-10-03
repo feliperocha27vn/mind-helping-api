@@ -80,6 +80,8 @@ export class CreateSchedulingUseCase {
       userPersonId,
     })
 
+    await this.hourlyRepository.updateStatusOcuped(hourly.id)
+
     return { scheduling }
   }
 }

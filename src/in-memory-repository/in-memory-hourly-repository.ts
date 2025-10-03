@@ -68,4 +68,22 @@ export class InMemoryHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async updateStatusOcuped(hourlyId: string) {
+    const hourly = this.items.find(item => item.id === hourlyId)
+
+    if (!hourly) {
+      return null
+    }
+
+    hourly.isOcuped = true
+
+    return hourly
+  }
+
+  async getById(id: string) {
+    const hourly = this.items.find(item => item.id === id) || null
+
+    return hourly
+  }
 }

@@ -8,6 +8,7 @@ export const fetchManyByScheduleId: FastifyPluginAsyncZod = async app => {
     '/hourlies/:scheduleId',
     {
       schema: {
+        tags: ['Hourlies'],
         params: z.object({
           scheduleId: z.uuid(),
         }),

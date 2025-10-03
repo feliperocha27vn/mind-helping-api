@@ -10,4 +10,6 @@ export interface HourlyRepository {
     interval: number
   ): Promise<Hourly[]>
   getHourlyByDateAndHour(date: Date, hour: string): Promise<Hourly | null>
+  updateStatusOcuped(hourlyId: string): Promise<Hourly | null>
+  getById(id: string): Promise<Hourly | null>
 }
