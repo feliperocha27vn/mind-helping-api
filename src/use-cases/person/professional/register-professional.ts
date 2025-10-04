@@ -1,7 +1,7 @@
+import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import type { PersonRepository } from '@/repositories/person-repository'
+import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { Professional } from '@prisma/client'
-import { ResourceNotFoundError } from '../../errors/resource-not-found-error'
-import type { PersonRepository } from '../../repositories/person-repository'
-import type { ProfessionalRepository } from '../../repositories/professional-repository'
 
 interface RegisterProfessionalUseCaseRequest {
   person_id: string

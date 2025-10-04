@@ -1,6 +1,6 @@
-import { PrismaPersonRepository } from '../repositories/prisma/prisma-person-repository'
-import { PrismaProfessionalRepository } from '../repositories/prisma/prisma-professional-repository'
-import { RegisterProfessionalUseCase } from '../use-cases/person/register-professional'
+import { PrismaPersonRepository } from '../../repositories/prisma/prisma-person-repository'
+import { PrismaProfessionalRepository } from '../../repositories/prisma/prisma-professional-repository'
+import { RegisterProfessionalUseCase } from '../../use-cases/person/register-professional'
 
 export function makeRegisterProfessionalUseCase() {
   const prismaPersonRepository = new PrismaPersonRepository()

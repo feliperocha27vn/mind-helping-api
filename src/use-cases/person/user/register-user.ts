@@ -1,7 +1,7 @@
 import type { UserRepository } from '@/repositories/user-repository'
 import type { User } from '@prisma/client'
-import { ResourceNotFoundError } from '../../errors/resource-not-found-error'
-import type { PersonRepository } from '../../repositories/person-repository'
+import { ResourceNotFoundError } from '../../../errors/resource-not-found-error'
+import type { PersonRepository } from '../../../repositories/person-repository'
 
 interface RegisterUserUseCaseRequest {
   person_id: string
@@ -30,7 +30,7 @@ export class RegisterUserUseCase {
 
     const user = await this.userRepository.create({
       person_id: person.id,
-      gender,
+      gender: gender ?? 'Não definido',
     })
 
     return {

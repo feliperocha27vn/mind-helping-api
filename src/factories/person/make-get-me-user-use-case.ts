@@ -1,7 +1,7 @@
 import { PrismaFeelingsRepository } from '@/repositories/prisma/prisma-feelings-repository'
 import { PrismaGoalRepository } from '@/repositories/prisma/prisma-goal-repository'
 import { PrismaPersonRepository } from '@/repositories/prisma/prisma-person-repository'
-import { GetMeUserUseCase } from '@/use-cases/person/get-me-user'
+import { GetMeUserUseCase } from '@/use-cases/person/user/get-me-user'
 
 export function makeGetMeUserUseCase() {
   const prismaPersonRepository = new PrismaPersonRepository()

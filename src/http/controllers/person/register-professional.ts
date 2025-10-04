@@ -2,8 +2,8 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod/v4'
 import { InvalidParametersError } from '../../../errors/invalid-parameters'
 import { ResourceNotFoundError } from '../../../errors/resource-not-found-error'
-import { makePersonUseCase } from '../../../factories/make-register-person-use-case'
-import { makeRegisterProfessionalUseCase } from '../../../factories/make-register-professional-use-case'
+import { makePersonUseCase } from '../../../factories/person/make-register-person-use-case'
+import { makeRegisterProfessionalUseCase } from '../../../factories/person/make-register-professional-use-case'
 
 export const registerProfessional: FastifyPluginAsyncZod = async app => {
   app.post(
@@ -34,7 +34,7 @@ export const registerProfessional: FastifyPluginAsyncZod = async app => {
               person_id: z.string(),
               crp: z.string(),
               voluntary: z.boolean(),
-            })
+            }),
           }),
           409: z.object({
             message: z.string(),

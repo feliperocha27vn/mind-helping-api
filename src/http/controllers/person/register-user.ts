@@ -1,6 +1,6 @@
 import { EmailAlreadyExistsError } from '@/errors/email-already-exists-error'
-import { makePersonUseCase } from '@/factories/make-register-person-use-case'
-import { makeRegisterUserUseCase } from '@/factories/make-register-user-use-case'
+import { makePersonUseCase } from '@/factories/person/make-register-person-use-case'
+import { makeRegisterUserUseCase } from '@/factories/person/make-register-user-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod/v4'
 
@@ -32,7 +32,7 @@ export const registerUser: FastifyPluginAsyncZod = async app => {
             user: z.object({
               person_id: z.string(),
               gender: z.string(),
-            })
+            }),
           }),
           400: z.object({ message: z.string() }),
           500: z.object({ message: z.string() }),

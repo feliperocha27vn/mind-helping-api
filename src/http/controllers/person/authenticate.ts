@@ -1,5 +1,5 @@
 import { InvalidCredentialsError } from '@/errors/invalid-credentials'
-import { makeAuthenticatePersonUseCase } from '@/factories/make-authenticate-person-use-case'
+import { makeAuthenticatePersonUseCase } from '@/factories/person/make-authenticate-person-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 

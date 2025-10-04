@@ -1,10 +1,10 @@
+import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
+import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
+import type { PersonRepository } from '@/repositories/person-repository'
+import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import { hash } from 'bcryptjs'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ResourceNotFoundError } from '../../errors/resource-not-found-error'
-import { InMemoryPersonRepository } from '../../in-memory-repository/in-memory-person-repository'
-import { InMemoryProfessionalRepository } from '../../in-memory-repository/in-memory-professional-repository'
-import type { PersonRepository } from '../../repositories/person-repository'
-import type { ProfessionalRepository } from '../../repositories/professional-repository'
 import { RegisterProfessionalUseCase } from './register-professional'
 
 let professionalRepository: ProfessionalRepository

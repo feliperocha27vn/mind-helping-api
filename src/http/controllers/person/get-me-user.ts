@@ -1,5 +1,5 @@
 import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
-import { makeGetMeUserUseCase } from '@/factories/make-get-me-user-use-case'
+import { makeGetMeUserUseCase } from '@/factories/person/make-get-me-user-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 
