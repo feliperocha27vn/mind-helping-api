@@ -47,7 +47,7 @@ describe('Create new schedule', () => {
 
     const createdSchedules = await prisma.schedule.findMany({
       where: { professionalPersonId: professional.person_id },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { initialTime: 'asc' },
     })
 
     const createdHourliesFirst = await prisma.hourly.findMany({

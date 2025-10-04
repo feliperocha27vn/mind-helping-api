@@ -8,6 +8,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { feelingsUserRoutes } from './http/controllers/feelings-user/routes'
 import { routesGoal } from './http/controllers/goal/routes'
 import { hourliesRoutes } from './http/controllers/hourlies/routes'
 import { personRoutes } from './http/controllers/person/routes'
@@ -44,3 +45,4 @@ app.register(routesGoal)
 app.register(hourliesRoutes)
 app.register(scheduleRoutes)
 app.register(schedulingRoutes)
+app.register(feelingsUserRoutes)
