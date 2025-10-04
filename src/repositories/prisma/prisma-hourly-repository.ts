@@ -10,9 +10,14 @@ export class PrismaHourlyRepository implements HourlyRepository {
       data,
     })
 
+    // Coleta todos os scheduleIds únicos do array de dados
+    const scheduleIds = [...new Set(data.map(item => item.scheduleId))]
+
     const hourlies = await prisma.hourly.findMany({
       where: {
-        scheduleId: data[0]?.scheduleId,
+        scheduleId: {
+          in: scheduleIds,
+        },
       },
     })
 
@@ -43,7 +48,16 @@ export class PrismaHourlyRepository implements HourlyRepository {
       currentTime = addMinutes(currentTime, interval)
     }
 
-    return this.createMany(slotsData)
+    await this.createMany(slotsData)
+
+    // Busca apenas os horários do scheduleId específico
+    const hourlies = await prisma.hourly.findMany({
+      where: {
+        scheduleId,
+      },
+    })
+
+    return hourlies
   }
 
   async fetchManyByScheduleId(scheduleId: string) {

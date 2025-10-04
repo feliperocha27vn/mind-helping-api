@@ -47,14 +47,17 @@ describe('Create new schedule', () => {
 
     const createdSchedules = await prisma.schedule.findMany({
       where: { professionalPersonId: professional.person_id },
+      orderBy: { createdAt: 'asc' },
     })
 
     const createdHourliesFirst = await prisma.hourly.findMany({
       where: { scheduleId: createdSchedules[0].id },
+      orderBy: { date: 'asc' },
     })
 
     const createdHourliesSecond = await prisma.hourly.findMany({
       where: { scheduleId: createdSchedules[1].id },
+      orderBy: { date: 'asc' },
     })
 
     expect(reply.statusCode).toEqual(201)

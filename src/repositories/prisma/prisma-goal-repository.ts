@@ -96,4 +96,15 @@ export class PrismaGoalRepository implements GoalRepository {
 
     return goal
   }
+
+  async getCountExecutedGoals(personId: string) {
+    const countedExecutedGoals = await prisma.goal.count({
+      where: {
+        userPersonId: personId,
+        isExecuted: true,
+      },
+    })
+
+    return countedExecutedGoals
+  }
 }

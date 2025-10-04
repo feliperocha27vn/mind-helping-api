@@ -143,4 +143,12 @@ export class InMemoryGoalRepository implements GoalRepository {
 
     return goal
   }
+
+  async getCountExecutedGoals(personId: string) {
+    const goalCount = this.goals.filter(
+      goal => goal.userPersonId === personId && goal.isExecuted === true
+    ).length
+
+    return goalCount
+  }
 }

@@ -1,7 +1,9 @@
 import { InMemoryFeelingsRepository } from '@/in-memory-repository/in-memory-feelings-repository'
+import { InMemoryGoalRepository } from '@/in-memory-repository/in-memory-goal-repository'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryUserRepository } from '@/in-memory-repository/in-memory-user-repository'
 import type { FeelingsRepository } from '@/repositories/feelings-repository'
+import type { GoalRepository } from '@/repositories/goal-repository'
 import type { PersonRepository } from '@/repositories/person-repository'
 import type { UserRepository } from '@/repositories/user-repository'
 import { hash } from 'bcryptjs'
@@ -11,6 +13,7 @@ import { GetMeUserUseCase } from './get-me-user'
 let userRepository: UserRepository
 let personRepository: PersonRepository
 let feelingsRepository: FeelingsRepository
+let goalRepository: GoalRepository
 let sut: GetMeUserUseCase
 
 describe('Get me user use case', () => {
@@ -18,7 +21,12 @@ describe('Get me user use case', () => {
     userRepository = new InMemoryUserRepository()
     personRepository = new InMemoryPersonRepository()
     feelingsRepository = new InMemoryFeelingsRepository()
-    sut = new GetMeUserUseCase(personRepository, feelingsRepository)
+    goalRepository = new InMemoryGoalRepository()
+    sut = new GetMeUserUseCase(
+      personRepository,
+      feelingsRepository,
+      goalRepository
+    )
   })
 
   it('should be able to create a feeling user', async () => {
@@ -59,5 +67,6 @@ describe('Get me user use case', () => {
     const { profile } = await sut.execute({ userId: user.person_id })
 
     expect(profile.nameUser).toEqual('Maria Silva Santos')
+    expect(profile.countExecutedGoals).toEqual(0)
   })
 })
