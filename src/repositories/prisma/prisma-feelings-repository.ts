@@ -23,4 +23,18 @@ export class PrismaFeelingsRepository implements FeelingsRepository {
 
     return feeling
   }
+
+  async getFeelingsByDay(userId: string, day: Date) {
+    const feelings = await prisma.feelingsUser.findMany({
+      where: {
+        userPersonId: userId,
+        createdAt: {
+          gte: day,
+          lt: new Date(day.getTime() + 24 * 60 * 60 * 1000), // +1 dia
+        },
+      },
+    })
+
+    return feelings
+  }
 }

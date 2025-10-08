@@ -20,7 +20,7 @@ export const getMeUser: FastifyPluginAsyncZod = async app => {
                 city: z.string(),
                 uf: z.string(),
               }),
-              lastFeeling: z.string(),
+              lastFeeling: z.string().optional(),
               countExecutedGoals: z.number(),
             }),
           }),

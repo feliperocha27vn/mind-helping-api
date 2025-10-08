@@ -1,5 +1,4 @@
 import { PersonNotFoundError } from '@/errors/person-not-found'
-import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
 import type { FeelingsRepository } from '@/repositories/feelings-repository'
 import type { GoalRepository } from '@/repositories/goal-repository'
 import type { PersonRepository } from '@/repositories/person-repository'
@@ -15,7 +14,7 @@ interface GetMeUserUseCaseReply {
       city: string
       uf: string
     }
-    lastFeeling: string
+    lastFeeling?: string
     countExecutedGoals: number
   }
 }
@@ -39,10 +38,6 @@ export class GetMeUserUseCase {
     const lastFeeling =
       await this.feelingsRepository.getLastFeelingsByUserId(userId)
 
-    if (!lastFeeling) {
-      throw new ResourceNotFoundError()
-    }
-
     const countExecutedGoals = await this.goalRepository.getCountExecutedGoals(
       personUser.id
     )
@@ -53,7 +48,7 @@ export class GetMeUserUseCase {
         city: personUser.city,
         uf: personUser.uf,
       },
-      lastFeeling: lastFeeling.description,
+      lastFeeling: lastFeeling?.description ?? undefined,
       countExecutedGoals: countExecutedGoals ?? 0,
     }
 

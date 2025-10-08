@@ -1,5 +1,6 @@
 import type { FeelingsRepository } from '@/repositories/feelings-repository'
 import type { FeelingsUser, Prisma } from '@prisma/client'
+import { isWithinInterval } from 'date-fns'
 import { randomUUID } from 'node:crypto'
 
 export class InMemoryFeelingsRepository implements FeelingsRepository {
@@ -29,5 +30,26 @@ export class InMemoryFeelingsRepository implements FeelingsRepository {
     }
 
     return lastFeeling
+  }
+
+  async getFeelingsByDay(userId: string, day: Date) {
+    // Apenas filtra pelos dados recebidos - sem lógica de validação
+    const startDay = new Date(day)
+    startDay.setUTCHours(0, 0, 0, 0)
+
+    const endDay = new Date(day)
+    endDay.setUTCHours(23, 59, 59, 999)
+
+    const feelingByDay = this.items.filter(item => {
+      const userMatch = item.userPersonId === userId
+      const dateInRange = isWithinInterval(item.createdAt, {
+        start: startDay,
+        end: endDay,
+      })
+
+      return userMatch && dateInRange
+    })
+
+    return feelingByDay
   }
 }

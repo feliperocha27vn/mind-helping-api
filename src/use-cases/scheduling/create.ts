@@ -1,3 +1,4 @@
+import { DateNotValidError } from '@/errors/date-not-valid'
 import { InvalidParametersError } from '@/errors/invalid-parameters'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
@@ -72,6 +73,10 @@ export class CreateSchedulingUseCase {
 
     if (!hourly) {
       throw new ResourceNotFoundError()
+    }
+
+    if (hourly.date < new Date()) {
+      throw new DateNotValidError()
     }
 
     const scheduling = await this.schedulingRepository.create({
