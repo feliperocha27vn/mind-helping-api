@@ -7,21 +7,21 @@ import type { PersonRepository } from '@/repositories/person-repository'
 import type { UserRepository } from '@/repositories/user-repository'
 import { hash } from 'bcryptjs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { GetFeelingByDayUseCase } from './get-feeling-by-day'
+import { GetFeelingsByDateUseCase } from './get-feelings-by-date'
 
 let userRepository: UserRepository
 let personRepository: PersonRepository
 let feelingsRepository: FeelingsRepository
-let sut: GetFeelingByDayUseCase
+let sut: GetFeelingsByDateUseCase
 
-describe('Get feeling by day use case', () => {
+describe('Get feelings by date use case', () => {
   beforeEach(() => {
     vi.useFakeTimers()
 
     userRepository = new InMemoryUserRepository()
     personRepository = new InMemoryPersonRepository()
     feelingsRepository = new InMemoryFeelingsRepository()
-    sut = new GetFeelingByDayUseCase(
+    sut = new GetFeelingsByDateUseCase(
       personRepository,
       userRepository,
       feelingsRepository
@@ -32,7 +32,7 @@ describe('Get feeling by day use case', () => {
     vi.useRealTimers()
   })
 
-  it('should be able get a feelings by day user', async () => {
+  it('should be able get a feelings by date user', async () => {
     vi.setSystemTime(new Date('2024-06-10T10:00:00'))
 
     const person = await personRepository.create({
@@ -77,7 +77,7 @@ describe('Get feeling by day use case', () => {
     expect(feelings).toHaveLength(2)
   })
 
-  it('should not be able get a feelings by day with invalid userId', async () => {
+  it('should not be able get a feelings by date with invalid userId', async () => {
     await expect(() =>
       sut.execute({
         userId: 'invalid-user-id',
@@ -86,7 +86,7 @@ describe('Get feeling by day use case', () => {
     ).rejects.toThrowError('Person not found')
   })
 
-  it('should not be able get a feelings by day with invalid date', async () => {
+  it('should not be able get a feelings by date with invalid date', async () => {
     const person = await personRepository.create({
       id: 'person-01',
       name: 'Maria Silva Santos',

@@ -23,8 +23,11 @@ export default (<Environment>{
 
     process.env.DATABASE_URL = databaseUrl
 
-    // Use db push to create the schema without migration conflicts
-    execSync('npx prisma db push --force-reset --skip-generate')
+    // Use db push to create the schema but skip client generation
+    // Prisma Client should already be generated before running tests (via package.json script)
+    execSync('npx prisma db push --force-reset --skip-generate', {
+      stdio: 'ignore', // Suppress output to avoid cluttering test results
+    })
 
     return {
       async teardown() {

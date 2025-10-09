@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify'
 import { createFeelingsUser } from './create'
-import { getFeelingByDayUser } from './get-feeling-by-day-user'
+import { getFeelingsByDateUser } from './get-feelings-by-date-user'
 
 export function feelingsUserRoutes(app: FastifyInstance) {
   app.register(createFeelingsUser)
-  app.register(getFeelingByDayUser)
+  app.register(getFeelingsByDateUser)
 }

@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { authenticate } from './authenticate'
 import { getMeUser } from './get-me-user'
+import { getUserById } from './get-user-by-id'
 import { registerProfessional } from './register-professional'
 import { registerUser } from './register-user'
 
@@ -9,4 +10,5 @@ export async function personRoutes(app: FastifyInstance) {
   app.register(registerUser)
   app.register(authenticate)
   app.register(getMeUser)
+  app.register(getUserById)
 }

@@ -6,10 +6,10 @@ import { z } from 'zod/v4'
 
 export const registerUser: FastifyPluginAsyncZod = async app => {
   app.post(
-    '/user',
+    '/users',
     {
       schema: {
-        tags: ['User'],
+        tags: ['Users'],
         body: z.object({
           name: z.string(),
           birth_date: z.coerce.date(),

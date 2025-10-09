@@ -8,7 +8,7 @@ export const createFeelingsUser: FastifyPluginAsyncZod = async app => {
     '/feelings/:userId',
     {
       schema: {
-        tags: ['FeelingsUser'],
+        tags: ['Feelings'],
         params: z.object({
           userId: z.uuid(),
         }),

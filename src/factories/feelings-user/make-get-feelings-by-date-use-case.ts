@@ -1,17 +1,17 @@
 import { PrismaFeelingsRepository } from '@/repositories/prisma/prisma-feelings-repository'
 import { PrismaPersonRepository } from '@/repositories/prisma/prisma-person-repository'
 import { PrismaUserRepository } from '@/repositories/prisma/prisma-user-repository'
-import { GetFeelingByDayUseCase } from '@/use-cases/feelings-user/get-feeling-by-day'
+import { GetFeelingsByDateUseCase } from '@/use-cases/feelings-user/get-feelings-by-date'
 
-export function makeGetFeelingByDayUseCase() {
+export function makeGetFeelingsByDateUseCase() {
   const prismaPersonRepository = new PrismaPersonRepository()
   const prismaUserRepository = new PrismaUserRepository()
   const prismaFeelingsRepository = new PrismaFeelingsRepository()
-  const getFeelingByDayUseCase = new GetFeelingByDayUseCase(
+  const getFeelingsByDateUseCase = new GetFeelingsByDateUseCase(
     prismaPersonRepository,
     prismaUserRepository,
     prismaFeelingsRepository
   )
 
-  return getFeelingByDayUseCase
+  return getFeelingsByDateUseCase
 }

@@ -1,10 +1,10 @@
 import { DateNotValidError } from '@/errors/date-not-valid'
 import { PersonNotFoundError } from '@/errors/person-not-found'
-import { makeGetFeelingByDayUseCase } from '@/factories/feelings-user/make-get-feeling-by-day-use-case'
+import { makeGetFeelingsByDateUseCase } from '@/factories/feelings-user/make-get-feelings-by-date-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 
-export const getFeelingByDayUser: FastifyPluginAsyncZod = async app => {
+export const getFeelingsByDateUser: FastifyPluginAsyncZod = async app => {
   app.get(
     '/feelings/:userId',
     {
@@ -14,7 +14,8 @@ export const getFeelingByDayUser: FastifyPluginAsyncZod = async app => {
           userId: z.uuid(),
         }),
         querystring: z.object({
-          day: z.coerce.date(),
+          startDay: z.coerce.date(),
+          endDay: z.coerce.date(),
         }),
         response: {
           200: z.object({
@@ -44,14 +45,15 @@ export const getFeelingByDayUser: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const { userId } = request.params
-      const { day } = request.query
+      const { startDay, endDay } = request.query
 
-      const getFeelingByDayUseCase = makeGetFeelingByDayUseCase()
+      const getFeelingsByDateUseCase = makeGetFeelingsByDateUseCase()
 
       try {
-        const { feelings } = await getFeelingByDayUseCase.execute({
+        const { feelings } = await getFeelingsByDateUseCase.execute({
           userId,
-          day,
+          startDay,
+          endDay,
         })
 
         return reply.status(200).send({ feelings })

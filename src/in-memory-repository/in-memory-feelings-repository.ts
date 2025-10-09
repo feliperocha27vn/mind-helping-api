@@ -32,15 +32,8 @@ export class InMemoryFeelingsRepository implements FeelingsRepository {
     return lastFeeling
   }
 
-  async getFeelingsByDay(userId: string, day: Date) {
-    // Apenas filtra pelos dados recebidos - sem lógica de validação
-    const startDay = new Date(day)
-    startDay.setUTCHours(0, 0, 0, 0)
-
-    const endDay = new Date(day)
-    endDay.setUTCHours(23, 59, 59, 999)
-
-    const feelingByDay = this.items.filter(item => {
+  async getFeelingsByDate(userId: string, startDay: Date, endDay: Date) {
+    const feelingsByDate = this.items.filter(item => {
       const userMatch = item.userPersonId === userId
       const dateInRange = isWithinInterval(item.createdAt, {
         start: startDay,
@@ -50,6 +43,8 @@ export class InMemoryFeelingsRepository implements FeelingsRepository {
       return userMatch && dateInRange
     })
 
-    return feelingByDay
+    return feelingsByDate.sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+    )
   }
 }

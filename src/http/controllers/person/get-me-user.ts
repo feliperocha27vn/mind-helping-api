@@ -8,7 +8,7 @@ export const getMeUser: FastifyPluginAsyncZod = async app => {
     '/me/:userId',
     {
       schema: {
-        tags: ['User'],
+        tags: ['Users'],
         params: z.object({
           userId: z.string().uuid(),
         }),
