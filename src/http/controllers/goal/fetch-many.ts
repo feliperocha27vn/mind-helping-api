@@ -23,6 +23,7 @@ export const fechMany: FastifyPluginAsyncZod = async app => {
                 numberDays: z.number(),
                 isExecuted: z.boolean(),
                 isExpire: z.boolean(),
+                counter: z.number(),
                 createdAt: z.date(),
                 updatedAt: z.date(),
               })
