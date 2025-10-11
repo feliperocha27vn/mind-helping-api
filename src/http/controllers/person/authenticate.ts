@@ -15,7 +15,10 @@ export const authenticate: FastifyPluginAsyncZod = async app => {
         }),
         response: {
           200: z.object({
-            isAuthenticated: z.boolean(),
+            user: z.object({
+              userId: z.uuid(),
+              isAuthenticated: z.boolean(),
+            }),
           }),
           401: z.object({
             message: z.string(),
@@ -32,12 +35,12 @@ export const authenticate: FastifyPluginAsyncZod = async app => {
       const authenticatePersonUseCase = makeAuthenticatePersonUseCase()
 
       try {
-        const { isAuthenticated } = await authenticatePersonUseCase.execute({
+        const { user } = await authenticatePersonUseCase.execute({
           email,
           password,
         })
 
-        return reply.status(200).send({ isAuthenticated })
+        return reply.status(200).send({ user })
       } catch (error) {
         if (error instanceof InvalidCredentialsError) {
           return reply.status(401).send({ message: error.message })

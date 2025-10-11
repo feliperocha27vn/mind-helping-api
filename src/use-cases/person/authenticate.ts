@@ -8,7 +8,10 @@ interface AuthenticatePersonUseCaseRequest {
 }
 
 interface AuthenticatePersonUseCaseReply {
-  isAuthenticated: boolean
+  user: {
+    isAuthenticated: boolean
+    userId: string
+  }
 }
 
 export class AuthenticatePersonUseCase {
@@ -30,6 +33,11 @@ export class AuthenticatePersonUseCase {
       throw new InvalidCredentialsError()
     }
 
-    return { isAuthenticated: true }
+    return {
+      user: {
+        isAuthenticated: true,
+        userId: person.id,
+      },
+    }
   }
 }
