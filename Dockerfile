@@ -1,24 +1,3 @@
-# Use the official Node.js 22 alpine image
-FROM node:22-alpine AS base
-
-# Instala pnpm globalmente
-RUN npm install -g pnpm
-
-# Set the working directory
-WORKDIR /app
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
-
-# Install only production dependencies for this stage
-RUN pnpm install --prod
-
-# Copy Prisma schema
-COPY prisma ./prisma/
-
-# Generate Prisma client
-RUN pnpm prisma generate
-
 # Build stage
 FROM node:22-alpine AS build
 
@@ -32,6 +11,10 @@ COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including dev dependencies)
 RUN pnpm install
+
+# Copy Prisma schema and generate client
+COPY prisma ./prisma/
+RUN pnpm prisma generate
 
 # Copy source code and config files
 COPY . .
@@ -60,9 +43,12 @@ COPY package.json pnpm-lock.yaml ./
 # Install only production dependencies
 RUN pnpm install --prod
 
-# Copy Prisma schema and generate client
+# Copy Prisma schema
 COPY prisma ./prisma/
-RUN pnpm prisma generate
+
+# Copy generated Prisma Client from build stage
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
 
 # Copy built application from build stage
 COPY --from=build /app/dist ./dist
