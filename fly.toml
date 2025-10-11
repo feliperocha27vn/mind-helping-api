@@ -8,6 +8,9 @@ primary_region = 'gru'
 
 [build]
 
+[processes]
+  app = "./start.sh node dist/server.js"
+
 [http_service]
   internal_port = 3333
   force_https = true
