@@ -1,40 +1,49 @@
 # Use the official Node.js 22 alpine image
 FROM node:22-alpine AS base
 
+# Instala pnpm globalmente
+RUN npm install -g pnpm
+
 # Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (if available)
-COPY package*.json ./
+# Copy package.json and pnpm-lock.yaml
+COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies
-RUN npm ci --only=production && npm cache clean --force
+# Install only production dependencies for this stage
+RUN pnpm install --prod
 
 # Copy Prisma schema
 COPY prisma ./prisma/
 
 # Generate Prisma client
-RUN npx prisma generate
+RUN pnpm prisma generate
 
 # Build stage
 FROM node:22-alpine AS build
 
+# Instala pnpm globalmente
+RUN npm install -g pnpm
+
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including dev dependencies)
-RUN npm ci
+RUN pnpm install
 
 # Copy source code and config files
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm build
 
 # Production stage
 FROM node:22-alpine AS production
+
+# Instala pnpm globalmente
+RUN npm install -g pnpm
 
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
@@ -46,14 +55,14 @@ RUN adduser -S nodejs -u 1001
 WORKDIR /app
 
 # Copy package.json for production dependencies
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
+RUN pnpm install --prod
 
 # Copy Prisma schema and generate client
 COPY prisma ./prisma/
-RUN npx prisma generate
+RUN pnpm prisma generate
 
 # Copy built application from build stage
 COPY --from=build /app/dist ./dist
@@ -78,3 +87,4 @@ ENTRYPOINT ["dumb-init", "--"]
 
 # Start the application with migrations
 CMD ["./start.sh", "node", "dist/server.js"]
+
