@@ -8,7 +8,7 @@ export const getById: FastifyPluginAsyncZod = async app => {
     '/professional/:professionalId',
     {
       schema: {
-        tags: ['Professional'],
+        tags: ['Professionals'],
         params: z.object({
           professionalId: z.string(),
         }),
