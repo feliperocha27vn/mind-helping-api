@@ -12,7 +12,7 @@ afterAll(async () => {
 
 describe('Register Professional Controller', () => {
   it('should be able to register a user', async () => {
-    const reply = await request(app.server).post('/user').send({
+    const reply = await request(app.server).post('/users').send({
       name: 'Ana Carolina Santos',
       birth_date: '1995-08-23',
       cpf: '12345678900',
