@@ -8,7 +8,7 @@ export const authenticate: FastifyPluginAsyncZod = async app => {
     '/persons/authenticate',
     {
       schema: {
-        tags: ['Users', 'Professional'],
+        tags: ['Users', 'Professionals'],
         body: z.object({
           email: z.email(),
           password: z.string().min(6),

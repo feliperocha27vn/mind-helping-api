@@ -10,7 +10,7 @@ export const registerProfessional: FastifyPluginAsyncZod = async app => {
     '/professional',
     {
       schema: {
-        tags: ['Professional'],
+        tags: ['Professionals'],
         body: z.object({
           name: z.string(),
           birth_date: z.coerce.date(),
