@@ -57,4 +57,15 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
     return schedulingsCount
   }
+
+  async getShedulingsCancelByProfessionalId(professionalId: string) {
+    const schedulingsCancel = await prisma.scheduling.count({
+      where: {
+        professionalPersonId: professionalId,
+        isCanceled: true,
+      },
+    })
+
+    return schedulingsCancel
+  }
 }

@@ -116,6 +116,7 @@ model Scheduling {
   professionalPersonId String       @map("professional_person_id")
   user                 User         @relation(fields: [userPersonId], references: [person_id])
   userPersonId         String       @map("user_person_id")
+  isCanceled           Boolean      @default(false) @map("is_canceled")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

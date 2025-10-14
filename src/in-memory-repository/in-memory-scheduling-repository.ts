@@ -7,11 +7,12 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
   public items: Scheduling[] = []
 
   async create(data: Prisma.SchedulingUncheckedCreateInput) {
-    const scheduling = {
+    const scheduling: Scheduling = {
       id: data.id ?? randomUUID(),
       hourlyId: data.hourlyId,
       professionalPersonId: data.professionalPersonId,
       userPersonId: data.userPersonId,
+      isCanceled: data.isCanceled ?? false,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -71,5 +72,21 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
     }
 
     return schedulingsCount
+  }
+
+  async getShedulingsCancelByProfessionalId(professionalId: string) {
+    const schedulings = this.items.filter(
+      item => item.professionalPersonId === professionalId
+    )
+
+    if (schedulings.length === 0) {
+      return null
+    }
+
+    const numberCancelSchedulings = schedulings.filter(
+      item => item.isCanceled === true
+    ).length
+
+    return numberCancelSchedulings
   }
 }
