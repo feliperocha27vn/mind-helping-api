@@ -67,6 +67,8 @@ describe('Get schedulings cancel by professional id use case', () => {
 
     const { schedulingsCancel } = await sut.execute({
       professionalId: professional.person_id,
+      startDay: new Date('2024-06-01'),
+      endDay: new Date('2024-06-30'),
     })
 
     expect(schedulingsCancel).toBe(1)

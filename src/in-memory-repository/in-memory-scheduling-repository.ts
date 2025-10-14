@@ -74,16 +74,26 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
     return schedulingsCount
   }
 
-  async getShedulingsCancelByProfessionalId(professionalId: string) {
-    const schedulings = this.items.filter(
-      item => item.professionalPersonId === professionalId
-    )
+  async getShedulingsCancelByProfessionalId(
+    professionalId: string,
+    startDay: Date,
+    endDay: Date
+  ) {
+    const schedulingsByDate = this.items.filter(item => {
+      const professionalMatch = item.professionalPersonId === professionalId
+      const dateInRange = isWithinInterval(item.createdAt, {
+        start: startDay,
+        end: endDay,
+      })
 
-    if (schedulings.length === 0) {
+      return professionalMatch && dateInRange
+    })
+
+    if (schedulingsByDate.length === 0) {
       return null
     }
 
-    const numberCancelSchedulings = schedulings.filter(
+    const numberCancelSchedulings = schedulingsByDate.filter(
       item => item.isCanceled === true
     ).length
 

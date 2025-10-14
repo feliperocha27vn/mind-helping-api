@@ -217,7 +217,6 @@ describe('Get schedulings by date use case', () => {
       voluntary: false,
     })
 
-    // Criar agendamentos em datas diferentes dentro do range
     await schedulingRepository.create({
       hourlyId: 'hourly-01',
       professionalPersonId: professional.person_id,

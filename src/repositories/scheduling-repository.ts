@@ -10,6 +10,8 @@ export interface SchedulingRepository {
     endDay: Date
   ): Promise<number | null>
   getShedulingsCancelByProfessionalId(
-    professionalId: string
+    professionalId: string,
+    startDay: Date,
+    endDay: Date
   ): Promise<number | null>
 }

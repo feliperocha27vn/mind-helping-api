@@ -1,6 +1,8 @@
+import { DateNotValidError } from '@/errors/date-not-valid'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { SchedulingRepository } from '@/repositories/scheduling-repository'
+import { validateDateTime } from '@/utils/validate-date-time'
 
 interface GetAttendanceRateUseCaseRequest {
   professionalId: string
@@ -30,16 +32,43 @@ export class GetAttendanceRateUseCase {
       throw new PersonNotFoundError()
     }
 
+    // Regra de negócio: validar e normalizar as datas para UTC
+    // Extrai a data inicial em UTC para evitar problemas de timezone
+    const startYear = startDay.getUTCFullYear()
+    const startMonth = String(startDay.getUTCMonth() + 1).padStart(2, '0')
+    const startDayOfMonth = String(startDay.getUTCDate()).padStart(2, '0')
+    const startDayStr = `${startYear}-${startMonth}-${startDayOfMonth}`
+
+    const normalizedStartDate = validateDateTime(startDayStr, '00:00')
+
+    if (!normalizedStartDate.isValid || !normalizedStartDate.dateTimeObj) {
+      throw new DateNotValidError()
+    }
+
+    // Extrai a data final em UTC
+    const endYear = endDay.getUTCFullYear()
+    const endMonth = String(endDay.getUTCMonth() + 1).padStart(2, '0')
+    const endDayOfMonth = String(endDay.getUTCDate()).padStart(2, '0')
+    const endDayStr = `${endYear}-${endMonth}-${endDayOfMonth}`
+
+    const normalizedEndDate = validateDateTime(endDayStr, '23:59')
+
+    if (!normalizedEndDate.isValid || !normalizedEndDate.dateTimeObj) {
+      throw new DateNotValidError()
+    }
+
     const countSchedulings =
       await this.schedulingRepository.getSchedulingsByDate(
         professionalId,
-        startDay,
-        endDay
+        normalizedStartDate.dateTimeObj,
+        normalizedEndDate.dateTimeObj
       )
 
     const countCanceledSchedulings =
       await this.schedulingRepository.getShedulingsCancelByProfessionalId(
-        professionalId
+        professionalId,
+        normalizedStartDate.dateTimeObj,
+        normalizedEndDate.dateTimeObj
       )
 
     if (
@@ -52,11 +81,13 @@ export class GetAttendanceRateUseCase {
       }
     }
 
-    const attendanceRate =
-      ((countSchedulings - countCanceledSchedulings) / countSchedulings) * 100
+    const attendanceRate = (
+      ((countSchedulings - countCanceledSchedulings) / countSchedulings) *
+      100
+    ).toFixed(0)
 
     return {
-      attendanceRate,
+      attendanceRate: Number(attendanceRate),
     }
   }
 }
