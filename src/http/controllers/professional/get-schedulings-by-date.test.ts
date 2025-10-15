@@ -14,8 +14,8 @@ afterAll(async () => {
   await app.close()
 })
 
-describe('Get cancel schedulings by professional id', () => {
-  it('should be able to get the number of cancel schedulings for a professional', async () => {
+describe('Get count of schedulings by professional id', () => {
+  it('should be able to get the number of schedulings for a professional', async () => {
     const { professional, schedule } = await createProfessionalAndSchedule()
     const { user } = await createUser()
 
@@ -39,8 +39,7 @@ describe('Get cancel schedulings by professional id', () => {
       data: {
         professionalPersonId: professional.person_id,
         userPersonId: user.person_id,
-        hourlyId: hourlies[2].id,
-        isCanceled: true,
+        hourlyId: hourlies[1].id,
         createdAt: new Date('2025-10-13T10:00:00'),
       },
     })
@@ -49,17 +48,25 @@ describe('Get cancel schedulings by professional id', () => {
       data: {
         professionalPersonId: professional.person_id,
         userPersonId: user.person_id,
-        hourlyId: hourlies[3].id,
-        isCanceled: true,
+        hourlyId: hourlies[2].id,
+        createdAt: new Date('2025-10-13T10:00:00'),
+      },
+    })
+
+    await prisma.scheduling.create({
+      data: {
+        professionalPersonId: professional.person_id,
+        userPersonId: user.person_id,
+        hourlyId: hourlies[6].id,
         createdAt: new Date('2025-10-12T10:00:00'),
       },
     })
 
     const reply = await request(app.server).get(
-      `/professionals/number-of-cancelations/${professional.person_id}?startDay=2025-10-10&endDay=2025-10-14`
+      `/professionals/number-schedulings/${professional.person_id}?startDay=2025-10-10&endDay=2025-10-14`
     )
 
     expect(reply.statusCode).toEqual(200)
-    expect(reply.body.schedulingsCancel).toEqual(2)
+    expect(reply.body.schedulingsCount).toEqual(3)
   })
 })
