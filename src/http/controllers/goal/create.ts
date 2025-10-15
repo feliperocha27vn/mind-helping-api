@@ -9,6 +9,8 @@ export const create: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        description:
+          'Cria uma nova meta (goal) para um usuário. Recebe o ID do usuário, a descrição da meta e a quantidade de dias para cumprimento. Retorna 201 em caso de sucesso. Erros 400 quando recursos relacionados não são encontrados e 500 em caso de erro interno.',
         body: z.object({
           userPersonId: z.string().uuid(),
           description: z.string(),

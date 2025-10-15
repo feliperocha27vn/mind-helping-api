@@ -9,6 +9,8 @@ export const authenticate: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users', 'Professionals'],
+        description:
+          'Autentica uma pessoa (usuário ou profissional) usando email e senha. Retorna um objeto com `userId` e `isAuthenticated` quando as credenciais são válidas. 401 em caso de credenciais inválidas.',
         body: z.object({
           email: z.email(),
           password: z.string().min(6),

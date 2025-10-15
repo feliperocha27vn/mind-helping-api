@@ -10,6 +10,8 @@ export const addCounter: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        description:
+          'Incrementa o contador (`counter`) de uma meta (`goal`) para um usuário específico. Use `goalId` e `personId` nos parâmetros. Retorna 200 quando incrementado com sucesso.',
         params: z.object({
           goalId: z.string(),
           personId: z.string(),

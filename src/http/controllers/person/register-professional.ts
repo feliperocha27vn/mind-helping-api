@@ -11,6 +11,8 @@ export const registerProfessional: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        description:
+          'Registra um novo profissional com dados pessoais e campos específicos (ex: CRP, voluntariado). Retorna o objeto `professional` com `person_id`, `crp` e `voluntary` quando criado.',
         body: z.object({
           name: z.string(),
           birth_date: z.coerce.date(),

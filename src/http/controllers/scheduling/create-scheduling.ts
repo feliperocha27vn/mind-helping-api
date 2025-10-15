@@ -11,6 +11,8 @@ export const createScheduling: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Schedulings'],
+        description:
+          'Cria um agendamento (scheduling) entre usuário e profissional. Forneça IDs do profissional, usuário, scheduleId, hora e data no body. Retorna 201 quando criado; 404 se recursos não existirem; 406 para parâmetros inválidos.',
         body: z.object({
           professionalPersonId: z.string(),
           userPersonId: z.string(),

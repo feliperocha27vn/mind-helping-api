@@ -10,6 +10,8 @@ export const getFeelingsByDateUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Feelings'],
+        description:
+          'Busca sentimentos registrados por data para um usuário. Forneça `userId` como parâmetro e `date` no query string (ex: ?date=2025-10-14). Retorna lista de sentimentos no dia ou 404 se usuário não encontrado.',
         params: z.object({
           userId: z.uuid(),
         }),

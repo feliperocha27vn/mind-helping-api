@@ -10,6 +10,8 @@ export const fechMany: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        description:
+          'Retorna todas as metas (goals) registradas para uma pessoa específica. Forneça o `personId` nos parâmetros de rota. Responde com um array de metas ou 404 se a pessoa ou metas não existirem.',
         params: z.object({
           personId: z.uuid(),
         }),

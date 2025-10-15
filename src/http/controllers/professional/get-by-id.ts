@@ -9,6 +9,8 @@ export const getById: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        description:
+          'Recupera os detalhes de um profissional por `professionalId`, incluindo contato, endereço e outros metadados. Retorna 200 com o objeto `professional` ou 400/404 em caso de erro.',
         params: z.object({
           professionalId: z.string(),
         }),
