@@ -9,6 +9,7 @@ export const getSchedulingsByDate: FastifyPluginAsyncZod = async app => {
     '/professionals/number-schedulings/:professionalId',
     {
       schema: {
+        tags: ['Professionals'],
         params: z.object({
           professionalId: z.uuid(),
         }),
