@@ -9,6 +9,7 @@ export const getAttendanceRate: FastifyPluginAsyncZod = async app => {
     '/professionals/attendance-rate/:professionalId',
     {
       schema: {
+        tags: ['Professionals'],
         params: z.object({
           professionalId: z.uuid(),
         }),
