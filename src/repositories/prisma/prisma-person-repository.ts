@@ -30,4 +30,15 @@ export class PrismaPersonRepository implements PersonRepository {
 
     return person
   }
+
+  async update(personId: string, data: Prisma.PersonUncheckedUpdateInput) {
+    const personUpdated = await prisma.person.update({
+      where: {
+        id: personId,
+      },
+      data,
+    })
+
+    return personUpdated
+  }
 }

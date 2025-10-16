@@ -9,7 +9,9 @@ export const getSchedulingsByDate: FastifyPluginAsyncZod = async app => {
     '/professionals/number-schedulings/:professionalId',
     {
       schema: {
-        tags: ['Professionals'],
+        tags: ['Profissionais'],
+        description:
+          'Obter o número de agendamentos para um profissional dentro de um intervalo de datas especificado.',
         params: z.object({
           professionalId: z.uuid(),
         }),
@@ -50,7 +52,7 @@ export const getSchedulingsByDate: FastifyPluginAsyncZod = async app => {
           return reply.status(404).send({ message: error.message })
         }
 
-        return reply.status(500).send({ message: 'Internal server error' })
+        return reply.status(500).send({ message: 'Erro interno do servidor' })
       }
     }
   )

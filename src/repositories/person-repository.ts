@@ -4,4 +4,8 @@ export interface PersonRepository {
   create(data: Prisma.PersonUncheckedCreateInput): Promise<Person>
   findById(personId: string): Promise<Person | null>
   findByEmail(email: string): Promise<Person | null>
+  update(
+    personId: string,
+    data: Prisma.PersonUncheckedUpdateInput
+  ): Promise<Person | null>
 }
