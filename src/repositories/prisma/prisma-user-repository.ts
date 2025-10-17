@@ -25,6 +25,8 @@ export class PrismaUserRepository implements UserRepository {
       data,
     })
 
+    console.log(userUpdated)
+
     return userUpdated
   }
 }

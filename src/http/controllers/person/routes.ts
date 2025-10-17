@@ -4,6 +4,8 @@ import { getMeUser } from './get-me-user'
 import { getUserById } from './get-user-by-id'
 import { registerProfessional } from './register-professional'
 import { registerUser } from './register-user'
+import { getDataForUpdateUser } from './get-data-for-update'
+import { updateUser } from './update-user'
 
 export async function personRoutes(app: FastifyInstance) {
   app.register(registerProfessional)
@@ -11,4 +13,6 @@ export async function personRoutes(app: FastifyInstance) {
   app.register(authenticate)
   app.register(getMeUser)
   app.register(getUserById)
+  app.register(getDataForUpdateUser)
+  app.register(updateUser)
 }

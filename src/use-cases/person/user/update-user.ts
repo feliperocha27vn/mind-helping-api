@@ -40,8 +40,22 @@ export class UpdateUserUseCase {
       throw new PersonNotFoundError()
     }
 
-    await this.personRepository.update(userId, data)
-    await this.userRepository.update(userId, data)
+    await this.personRepository.update(userId, {
+      address: data.address,
+      neighborhood: data.neighborhood,
+      number: data.number,
+      complement: data.complement,
+      cep: data.cep,
+      city: data.city,
+      uf: data.uf,
+      phone: data.phone,
+      name: data.name,
+      cpf: data.cpf,
+      email: data.email,
+    })
+    await this.userRepository.update(userId, {
+      gender: data.gender,
+    })
 
     const updatedUser = await this.userRepository.getById(userId)
 

@@ -22,7 +22,7 @@ export async function createUser() {
 
   const user = await prisma.user.create({
     data: {
-      gender: 'female',
+      gender: 'male',
       person_id: person.id,
     },
   })
