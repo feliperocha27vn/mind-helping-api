@@ -9,7 +9,7 @@ export const getSchedulingsByDate: FastifyPluginAsyncZod = async app => {
     '/professionals/number-schedulings/:professionalId',
     {
       schema: {
-        tags: ['Profissionais'],
+        tags: ['Profissionals'],
         description:
           'Obter o número de agendamentos para um profissional dentro de um intervalo de datas especificado.',
         params: z.object({

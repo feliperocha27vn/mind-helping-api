@@ -10,6 +10,7 @@ export const fetchDailysByDateRangeAndUserId: FastifyPluginAsyncZod =
       '/dailys/:userId',
       {
         schema: {
+          tags: ['Dailys'],
           params: z.object({
             userId: z.uuid(),
           }),
