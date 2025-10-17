@@ -15,11 +15,13 @@ import { personRoutes } from './http/controllers/person/routes'
 import { routesProfessional } from './http/controllers/professional/routes'
 import { scheduleRoutes } from './http/controllers/schedule/routes'
 import { schedulingRoutes } from './http/controllers/scheduling/routes'
+import { dailysRoutes } from './http/controllers/dailys/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.register(fastifyCors, {
   origin: true,
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
 })
 
 app.setSerializerCompiler(serializerCompiler)
@@ -46,3 +48,4 @@ app.register(hourliesRoutes)
 app.register(scheduleRoutes)
 app.register(schedulingRoutes)
 app.register(feelingsUserRoutes)
+app.register(dailysRoutes)

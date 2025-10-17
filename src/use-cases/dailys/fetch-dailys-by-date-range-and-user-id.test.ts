@@ -93,4 +93,57 @@ describe('Fetch dailys', () => {
       })
     ).rejects.toBeInstanceOf(PersonNotFoundError)
   })
+
+  it('should be able to fetch a dailys by user, in unique date', async () => {
+    vi.setSystemTime(new Date('2023-10-01'))
+
+    const person = await personRepository.create({
+      id: 'user-01',
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const user = await userRepository.create({
+      gender: 'female',
+      person_id: person.id,
+    })
+
+    await dailyRepository.create({
+      content: 'Today I worked on the project and made significant progress.',
+      userPersonId: user.person_id,
+    })
+
+    await dailyRepository.create({
+      content: 'Today I had a meeting with the team to discuss the next steps.',
+      userPersonId: user.person_id,
+    })
+
+    const { dailys } = await sut.execute({
+      userId: user.person_id,
+      startDay: new Date('2023-01-01'),
+      endDay: new Date('2024-01-01'),
+    })
+
+    expect(dailys).toHaveLength(2)
+    expect(dailys).toEqual([
+      expect.objectContaining({
+        content: 'Today I worked on the project and made significant progress.',
+      }),
+      expect.objectContaining({
+        content:
+          'Today I had a meeting with the team to discuss the next steps.',
+      }),
+    ])
+  })
 })
