@@ -59,6 +59,7 @@ model User {
   Daily        Daily[]
   Scheduling   Scheduling[]
   FeelingsUser FeelingsUser[]
+  CvvCalls     CvvCalls[]
 
   @@map("user")
 }
@@ -148,4 +149,15 @@ model FeelingsUser {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("feelings_user")
+}
+
+model CvvCalls {
+  id         String   @id @default(uuid())
+  dateCalled DateTime @map("date_called")
+  timeCalled String   @map("time_called")
+
+  user         User   @relation(fields: [userPersonId], references: [person_id])
+  userPersonId String @map("user_person_id")
+
+  @@map("cvv_calls")
 }
