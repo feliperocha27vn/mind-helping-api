@@ -8,6 +8,8 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
+import { cvvCallsRoutes } from './http/controllers/cvv-calls/routes'
+import { dailysRoutes } from './http/controllers/dailys/routes'
 import { feelingsUserRoutes } from './http/controllers/feelings-user/routes'
 import { routesGoal } from './http/controllers/goal/routes'
 import { hourliesRoutes } from './http/controllers/hourlies/routes'
@@ -15,7 +17,6 @@ import { personRoutes } from './http/controllers/person/routes'
 import { routesProfessional } from './http/controllers/professional/routes'
 import { scheduleRoutes } from './http/controllers/schedule/routes'
 import { schedulingRoutes } from './http/controllers/scheduling/routes'
-import { dailysRoutes } from './http/controllers/dailys/routes'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -49,3 +50,4 @@ app.register(scheduleRoutes)
 app.register(schedulingRoutes)
 app.register(feelingsUserRoutes)
 app.register(dailysRoutes)
+app.register(cvvCallsRoutes)
