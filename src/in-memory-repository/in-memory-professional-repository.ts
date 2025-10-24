@@ -87,4 +87,42 @@ export class InMemoryProfessionalRepository implements ProfessionalRepository {
       voluntary: professional.voluntary,
     }
   }
+
+  async getProfessionalById(professionalId: string) {
+    const professional = this.items.find(
+      item => item.person_id === professionalId
+    )
+
+    if (!professional) {
+      return null
+    }
+
+    return professional
+  }
+
+  async update(
+    professionalId: string,
+    data: Prisma.ProfessionalUncheckedUpdateInput
+  ) {
+    const existingProfessional = this.items.find(
+      item => item.person_id === professionalId
+    )
+
+    if (!existingProfessional) {
+      return null
+    }
+
+    const updatedProfessional = {
+      ...existingProfessional,
+      voluntary: (data.voluntary as boolean) ?? existingProfessional.voluntary,
+    }
+
+    const index = this.items.findIndex(
+      item => item.person_id === professionalId
+    )
+
+    this.items[index] = updatedProfessional
+
+    return updatedProfessional
+  }
 }

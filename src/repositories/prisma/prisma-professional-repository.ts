@@ -65,4 +65,28 @@ export class PrismaProfessionalRepository implements ProfessionalRepository {
       voluntary: professional.voluntary,
     }
   }
+
+  async getProfessionalById(professionalId: string) {
+    const professional = await prisma.professional.findUnique({
+      where: {
+        person_id: professionalId,
+      },
+    })
+
+    return professional
+  }
+
+  async update(
+    professionalId: string,
+    data: Prisma.ProfessionalUncheckedUpdateInput
+  ) {
+    const professionalUpdated = await prisma.professional.update({
+      where: {
+        person_id: professionalId,
+      },
+      data,
+    })
+
+    return professionalUpdated
+  }
 }
