@@ -14,7 +14,7 @@ export const getDailyById: FastifyPluginAsyncZod = async app => {
           userId: z.uuid(),
           dailyId: z.uuid(),
         }),
-        reponse: {
+        response: {
           200: z.object({
             daily: z.object({
               content: z.string(),
