@@ -69,6 +69,8 @@ export class InMemoryPersonRepository implements PersonRepository {
       uf: (data.uf as string) ?? existingPerson.uf,
       phone: (data.phone as string) ?? existingPerson.phone,
       email: (data.email as string) ?? existingPerson.email,
+      password_hash:
+        (data.password_hash as string) ?? existingPerson.password_hash,
     }
 
     const personIndex = this.items.findIndex(item => item.id === personId)

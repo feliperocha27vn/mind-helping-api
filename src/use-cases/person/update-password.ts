@@ -1,22 +1,27 @@
 import { InvalidCredentialsError } from '@/errors/invalid-credentials'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { PersonRepository } from '@/repositories/person-repository'
+import type { Person } from '@prisma/client'
 import { compare, hash } from 'bcryptjs'
 
-interface UpdatePassowrdPersonUseCaseRequest {
+interface UpdatePasswordPersonUseCaseRequest {
   personId: string
-  passowordCurrent: string
+  passwordCurrent: string
   newPassword: string
 }
 
-export class UpdatePassowrdPersonUseCase {
+interface UpdatePasswordPersonUseCaseReply {
+  person: Person
+}
+
+export class UpdatePasswordPersonUseCase {
   constructor(private personRepository: PersonRepository) {}
 
   async execute({
     personId,
     newPassword,
-    passowordCurrent,
-  }: UpdatePassowrdPersonUseCaseRequest) {
+    passwordCurrent,
+  }: UpdatePasswordPersonUseCaseRequest): Promise<UpdatePasswordPersonUseCaseReply> {
     const person = await this.personRepository.findById(personId)
 
     if (!person) {
@@ -24,7 +29,7 @@ export class UpdatePassowrdPersonUseCase {
     }
 
     const doesPasswordMatch = await compare(
-      passowordCurrent,
+      passwordCurrent,
       person.password_hash
     )
 
@@ -32,8 +37,14 @@ export class UpdatePassowrdPersonUseCase {
       throw new InvalidCredentialsError()
     }
 
-    await this.personRepository.update(personId, {
+    const personUpdated = await this.personRepository.update(personId, {
       password_hash: await hash(newPassword, 10),
     })
+
+    if (!personUpdated) {
+      throw new PersonNotFoundError()
+    }
+
+    return { person: personUpdated }
   }
 }

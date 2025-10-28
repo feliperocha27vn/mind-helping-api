@@ -1,10 +1,11 @@
 import type { FastifyInstance } from 'fastify'
 import { authenticate } from './authenticate'
+import { getDataForUpdateUser } from './get-data-for-update'
 import { getMeUser } from './get-me-user'
 import { getUserById } from './get-user-by-id'
 import { registerProfessional } from './register-professional'
 import { registerUser } from './register-user'
-import { getDataForUpdateUser } from './get-data-for-update'
+import { updatePasswordPerson } from './update-password'
 import { updateUser } from './update-user'
 
 export async function personRoutes(app: FastifyInstance) {
@@ -15,4 +16,5 @@ export async function personRoutes(app: FastifyInstance) {
   app.register(getUserById)
   app.register(getDataForUpdateUser)
   app.register(updateUser)
+  app.register(updatePasswordPerson)
 }
