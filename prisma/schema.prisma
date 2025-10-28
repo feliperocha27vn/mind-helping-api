@@ -32,8 +32,9 @@ model Person {
   email         String   @unique
   password_hash String
 
-  Professional Professional[]
-  User         User[]
+  Professional       Professional[]
+  User               User[]
+  ResetPasswordCodes ResetPasswordCodes[]
 
   @@map("person")
 }
@@ -160,4 +161,14 @@ model CvvCalls {
   userPersonId String @map("user_person_id")
 
   @@map("cvv_calls")
+}
+
+model ResetPasswordCodes {
+  id        String   @id @default(uuid())
+  person    Person   @relation(fields: [personId], references: [id])
+  personId  String   @map("person_id")
+  code      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("reset_password_codes")
 }

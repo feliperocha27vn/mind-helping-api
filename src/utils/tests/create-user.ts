@@ -15,7 +15,7 @@ export async function createUser() {
       city: 'Birigui',
       uf: 'SP',
       phone: '(18) 99123-4567',
-      email: 'roberto.silva@example.com',
+      email: 'feliperochafifa@gmail.com',
       password_hash: await hash('hashed-password', 6),
     },
   })
@@ -27,5 +27,5 @@ export async function createUser() {
     },
   })
 
-  return { user }
+  return { user, person }
 }
