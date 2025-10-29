@@ -6,7 +6,7 @@ export class PrismaResetPasswordCodesRepository
   implements ResetPasswordCodeRepository
 {
   async create(data: Prisma.ResetPasswordCodesUncheckedCreateInput) {
-    const resetPasswordCode = await prisma.resetPasswordCodes.create({
+    await prisma.resetPasswordCodes.create({
       data,
     })
 
