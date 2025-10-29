@@ -7,7 +7,7 @@ import type { ResetPasswordCodeRepository } from '@/repositories/reset-password-
 import { hash } from 'bcryptjs'
 import { addMinutes } from 'date-fns'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { VerifyResetPasswordCodeUseCase } from './verify-reset-password-code-use-case '
+import { VerifyResetPasswordCodeUseCase } from './verify-reset-password-code-use-case'
 
 let personRepository: PersonRepository
 let resetPasswordCodesRepository: ResetPasswordCodeRepository

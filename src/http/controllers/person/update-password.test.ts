@@ -20,7 +20,7 @@ describe('Update person password', () => {
     const reply = await request(app.server)
       .patch(`/users/password/${user.person_id}`)
       .send({
-        passwordCurrent: 'hashed-password',
+        repeatPassword: 'new-hashed-password',
         newPassword: 'new-hashed-password',
       })
 

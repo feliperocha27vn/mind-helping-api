@@ -33,8 +33,8 @@ describe('Update password use case', () => {
 
     const { person } = await sut.execute({
       personId: personCreated.id,
-      passwordCurrent: 'senha123',
       newPassword: 'novasenha456',
+      repeatPassword: 'novasenha456',
     })
 
     const doesPasswordMatch = await compare(

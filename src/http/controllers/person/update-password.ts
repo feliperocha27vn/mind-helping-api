@@ -16,7 +16,7 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
           personId: z.uuid(),
         }),
         body: z.object({
-          passwordCurrent: z.string().min(6),
+          repeatPassword: z.string().min(6),
           newPassword: z.string().min(6),
         }),
         response: {
@@ -35,7 +35,7 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
     },
     async (request, reply) => {
       const { personId } = request.params
-      const { passwordCurrent, newPassword } = request.body
+      const { repeatPassword, newPassword } = request.body
 
       const updatePasswordPersonUseCase = makeUpdatePasswordPersonUseCase()
 
@@ -43,7 +43,7 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
         await updatePasswordPersonUseCase.execute({
           personId,
           newPassword,
-          passwordCurrent,
+          repeatPassword,
         })
 
         return reply.status(204).send()

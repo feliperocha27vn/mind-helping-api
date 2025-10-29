@@ -15,6 +15,7 @@ import { routesGoal } from './http/controllers/goal/routes'
 import { hourliesRoutes } from './http/controllers/hourlies/routes'
 import { personRoutes } from './http/controllers/person/routes'
 import { routesProfessional } from './http/controllers/professional/routes'
+import { resetPasswordCodesRoutes } from './http/controllers/reset-password-codes/routes'
 import { scheduleRoutes } from './http/controllers/schedule/routes'
 import { schedulingRoutes } from './http/controllers/scheduling/routes'
 
@@ -51,3 +52,4 @@ app.register(schedulingRoutes)
 app.register(feelingsUserRoutes)
 app.register(dailysRoutes)
 app.register(cvvCallsRoutes)
+app.register(resetPasswordCodesRoutes)

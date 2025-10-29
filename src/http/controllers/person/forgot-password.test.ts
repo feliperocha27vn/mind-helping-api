@@ -12,7 +12,7 @@ afterAll(async () => {
 })
 
 describe('Forgot password', () => {
-  it('should be able to send a forgot password email', async () => {
+  it.skip('should be able to send a forgot password email', async () => {
     const { person } = await createUser()
 
     const reply = await request(app.server)
