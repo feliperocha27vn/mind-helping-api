@@ -2,7 +2,6 @@ import { z } from 'zod'
 
 const envSchema = z.object({
   PORT: z.coerce.number(),
-  API_KEY_MAIL_SENDER: z.string(),
   EMAIL_FROM: z.email(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
