@@ -5,7 +5,7 @@ import type { Person } from '@prisma/client'
 import { hash } from 'bcryptjs'
 
 interface UpdatePasswordPersonUseCaseRequest {
-  personId: string
+  email: string
   newPassword: string
   repeatPassword: string
 }
@@ -18,11 +18,11 @@ export class UpdatePasswordPersonUseCase {
   constructor(private personRepository: PersonRepository) {}
 
   async execute({
-    personId,
+    email,
     newPassword,
     repeatPassword,
   }: UpdatePasswordPersonUseCaseRequest): Promise<UpdatePasswordPersonUseCaseReply> {
-    const person = await this.personRepository.findById(personId)
+    const person = await this.personRepository.findByEmail(email)
 
     if (!person) {
       throw new PersonNotFoundError()
@@ -32,7 +32,7 @@ export class UpdatePasswordPersonUseCase {
       throw new InvalidCredentialsError()
     }
 
-    const personUpdated = await this.personRepository.update(personId, {
+    const personUpdated = await this.personRepository.update(person.id, {
       password_hash: await hash(newPassword, 10),
     })
 

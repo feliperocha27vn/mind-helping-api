@@ -6,7 +6,7 @@ import z from 'zod'
 
 export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
   app.patch(
-    '/users/password/:personId',
+    '/users/password',
     {
       schema: {
         tags: ['Persons'],
@@ -16,6 +16,7 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
           personId: z.uuid(),
         }),
         body: z.object({
+          email: z.email(),
           repeatPassword: z.string().min(6),
           newPassword: z.string().min(6),
         }),
@@ -34,14 +35,13 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
       },
     },
     async (request, reply) => {
-      const { personId } = request.params
-      const { repeatPassword, newPassword } = request.body
+      const { email, repeatPassword, newPassword } = request.body
 
       const updatePasswordPersonUseCase = makeUpdatePasswordPersonUseCase()
 
       try {
         await updatePasswordPersonUseCase.execute({
-          personId,
+          email,
           newPassword,
           repeatPassword,
         })
