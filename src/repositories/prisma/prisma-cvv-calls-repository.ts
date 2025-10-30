@@ -10,4 +10,14 @@ export class PrismaCvvCallsRepository implements CvvCallsRepository {
 
     return cvvCall
   }
+
+  async getByPersonId(personId: string) {
+    const cvvCalls = await prisma.cvvCalls.findMany({
+      where: {
+        userPersonId: personId,
+      },
+    })
+
+    return cvvCalls
+  }
 }
