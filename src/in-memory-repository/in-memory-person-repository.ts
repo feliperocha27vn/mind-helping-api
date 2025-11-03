@@ -21,6 +21,7 @@ export class InMemoryPersonRepository implements PersonRepository {
       phone: data.phone,
       email: data.email,
       password_hash: data.password_hash,
+      isDeleted: data.isDeleted ?? false,
     }
 
     this.items.push(person)
@@ -78,5 +79,17 @@ export class InMemoryPersonRepository implements PersonRepository {
     this.items[personIndex] = updatedPerson
 
     return updatedPerson
+  }
+
+  async delete(personId: string) {
+    const person = this.items.find(item => item.id === personId)
+
+    if (!person) {
+      return null
+    }
+
+    person.isDeleted = true
+
+    return person
   }
 }

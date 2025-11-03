@@ -41,4 +41,17 @@ export class PrismaPersonRepository implements PersonRepository {
 
     return personUpdated
   }
+
+  async delete(personId: string) {
+    const person = await prisma.person.update({
+      data: {
+        isDeleted: true,
+      },
+      where: {
+        id: personId,
+      },
+    })
+
+    return person
+  }
 }

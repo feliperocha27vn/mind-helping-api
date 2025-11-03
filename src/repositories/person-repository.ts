@@ -8,4 +8,5 @@ export interface PersonRepository {
     personId: string,
     data: Prisma.PersonUncheckedUpdateInput
   ): Promise<Person | null>
+  delete(personId: string): Promise<Person | null>
 }

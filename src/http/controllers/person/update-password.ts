@@ -53,7 +53,9 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
           return reply.status(422).send({ message: error.message })
         }
 
-        return reply.status(500).send({ message: 'Internal server error.' })
+        console.error(error)
+
+        throw error
       }
     }
   )

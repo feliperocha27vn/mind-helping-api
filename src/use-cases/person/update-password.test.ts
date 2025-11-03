@@ -32,7 +32,7 @@ describe('Update password use case', () => {
     })
 
     const { person } = await sut.execute({
-      personId: personCreated.id,
+      email: personCreated.email,
       newPassword: 'novasenha456',
       repeatPassword: 'novasenha456',
     })

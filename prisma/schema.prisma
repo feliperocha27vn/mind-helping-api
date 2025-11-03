@@ -31,6 +31,7 @@ model Person {
   phone         String
   email         String   @unique
   password_hash String
+  isDeleted     Boolean  @default(false) @map("is_deleted")
 
   Professional       Professional[]
   User               User[]

@@ -15,19 +15,18 @@ afterAll(async () => {
 
 describe('Update person password', () => {
   it('should be able to update a person password', async () => {
-    const { user } = await createUser()
+    const { person } = await createUser()
 
-    const reply = await request(app.server)
-      .patch(`/users/password/${user.person_id}`)
-      .send({
-        repeatPassword: 'new-hashed-password',
-        newPassword: 'new-hashed-password',
-      })
+    const reply = await request(app.server).patch('/users/password').send({
+      email: person.email,
+      repeatPassword: 'new-hashed-password',
+      newPassword: 'new-hashed-password',
+    })
 
     expect(reply.statusCode).toEqual(204)
 
     const personUpdated = await prisma.person.findUniqueOrThrow({
-      where: { id: user.person_id },
+      where: { id: person.id },
     })
 
     const doesPasswordMatch = await compare(
