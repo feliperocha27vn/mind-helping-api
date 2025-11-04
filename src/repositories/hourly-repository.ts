@@ -12,4 +12,5 @@ export interface HourlyRepository {
   getHourlyByDateAndHour(date: Date, hour: string): Promise<Hourly | null>
   updateStatusOcuped(hourlyId: string): Promise<Hourly | null>
   getById(id: string): Promise<Hourly | null>
+  setCancelHourly(hourlyId: string): Promise<Hourly | null>
 }

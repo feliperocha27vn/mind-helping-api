@@ -103,4 +103,17 @@ export class PrismaHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async setCancelHourly(hourlyId: string) {
+    const hourly = await prisma.hourly.update({
+      data: {
+        isOcuped: false,
+      },
+      where: {
+        id: hourlyId,
+      },
+    })
+
+    return hourly
+  }
 }

@@ -86,4 +86,16 @@ export class InMemoryHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async setCancelHourly(hourlyId: string) {
+    const hourly = this.items.find(item => item.id === hourlyId)
+
+    if (!hourly) {
+      return null
+    }
+
+    hourly.isOcuped = false
+
+    return hourly
+  }
 }

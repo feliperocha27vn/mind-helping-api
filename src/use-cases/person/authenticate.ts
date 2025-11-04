@@ -1,3 +1,4 @@
+import { AccountDeletedError } from '@/errors/account-deleted'
 import { InvalidCredentialsError } from '@/errors/invalid-credentials'
 import type { PersonRepository } from '@/repositories/person-repository'
 import { compare } from 'bcryptjs'
@@ -25,6 +26,10 @@ export class AuthenticatePersonUseCase {
 
     if (!person) {
       throw new InvalidCredentialsError()
+    }
+
+    if (person.isDeleted) {
+      throw new AccountDeletedError()
     }
 
     const doesPasswordMatch = await compare(password, person.password_hash)
