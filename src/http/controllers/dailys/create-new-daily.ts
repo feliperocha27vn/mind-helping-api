@@ -9,6 +9,7 @@ export const createNewDaily: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Dailys'],
+        summary: 'Criar novo diário',
         description: 'Cria um novo diário para o usuário especificado.',
         params: z.object({
           userId: z.uuid(),

@@ -9,6 +9,7 @@ export const getSchedulingByUserId: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Schedulings'],
+        summary: 'Obter agendamentos do usuário',
         description:
           'Retorna os agendamentos (schedulings) de um usuário especificado por `userId`. Entrega detalhes como profissional, data, hora e endereço. Retorna 200 com os dados ou 404 se não encontrados.',
         params: z.object({

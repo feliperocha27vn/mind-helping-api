@@ -10,6 +10,7 @@ export const registerUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users'],
+        summary: 'Registrar novo usuário',
         description:
           'Registra um novo usuário com dados pessoais e credenciais. Retorna os dados do usuário criado (incluindo `person_id` e `gender`) no corpo com status 201. Erros 400 para request inválido e 500 para falhas do servidor.',
         body: z.object({

@@ -10,6 +10,9 @@ export const getDailyById: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Dailys'],
+        summary: 'Obter diário por ID',
+        description:
+          'Retorna os detalhes de um diário específico. Forneça `userId` e `dailyId` nos parâmetros.',
         params: z.object({
           userId: z.uuid(),
           dailyId: z.uuid(),

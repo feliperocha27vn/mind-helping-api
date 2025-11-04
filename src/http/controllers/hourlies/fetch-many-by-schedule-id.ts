@@ -9,6 +9,7 @@ export const fetchManyByScheduleId: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Hourlies'],
+        summary: 'Listar horários disponíveis',
         description:
           'Lista horários (hourlies) disponíveis para um dado `scheduleId`. Retorna um array de horários com status de ocupação e informações da data.',
         params: z.object({

@@ -9,6 +9,7 @@ export const createFeelingsUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Feelings'],
+        summary: 'Registrar sentimento',
         description:
           'Registra uma sensação (feeling) para um usuário identificado por `userId` na rota. O body aceita um dos valores predefinidos para `description` e um `motive` opcional. Retorna 201 quando criado, 404 se o usuário não existir.',
         params: z.object({

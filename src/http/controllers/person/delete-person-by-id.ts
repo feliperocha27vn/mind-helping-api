@@ -9,6 +9,7 @@ export const deletePersonById: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Persons'],
+        summary: 'Deletar pessoa',
         description:
           'Deleta uma pessoa de acordo com `personId`. Retorna 204 em sucesso e 404 quando a pessoa não existe.',
         params: z.object({

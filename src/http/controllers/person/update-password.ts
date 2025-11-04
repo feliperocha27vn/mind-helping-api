@@ -10,6 +10,7 @@ export const updatePasswordPerson: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Persons'],
+        summary: 'Atualizar senha da pessoa',
         description:
           'Atualiza a senha da pessoa especificada por `personId`. Permite atualização parcial dos campos pessoais e de contato; retorna 204 em sucesso e 404 quando a pessoa não existe.',
         body: z.object({

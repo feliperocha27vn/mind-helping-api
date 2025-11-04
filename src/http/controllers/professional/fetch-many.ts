@@ -8,6 +8,7 @@ export const fetchMany: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        summary: 'Buscar profissionais',
         description:
           'Busca profissionais com base em um termo de pesquisa passado via query `search`. Retorna lista de profissionais correspondentes ou 400 em caso de erro.',
         querystring: z.object({

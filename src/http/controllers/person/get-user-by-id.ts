@@ -9,6 +9,7 @@ export const getUserById: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users'],
+        summary: 'Obter dados do usuário',
         description:
           'Retorna os dados completos de um usuário identificado por `userId`, incluindo informações de contato e endereço. Útil para exibir perfil e preencher formulários no front-end.',
         params: z.object({

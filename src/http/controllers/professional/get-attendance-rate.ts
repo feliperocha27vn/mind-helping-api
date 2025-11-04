@@ -10,6 +10,7 @@ export const getAttendanceRate: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        summary: 'Obter taxa de presença',
         description:
           'Calcula a taxa de presença dos agendamentos de um profissional entre `startDay` e `endDay`. Use as queries `startDay` e `endDay` no formato ISO. Retorna 200 com `attendanceRate` ou 400/404/500 conforme erro.',
         params: z.object({

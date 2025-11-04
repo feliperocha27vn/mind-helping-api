@@ -9,6 +9,7 @@ export const getMeUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users'],
+        summary: 'Obter perfil do usuário',
         description:
           'Retorna um resumo do perfil do usuário (`profile`) contendo nome, cidade/UF, último sentimento e contagem de metas executadas. Útil para dashboards e visão rápida do estado do usuário.',
         params: z.object({

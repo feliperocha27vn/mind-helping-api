@@ -12,6 +12,7 @@ export const forgotPassword: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Persons'],
+        summary: 'Solicitar redefinição de senha',
         description:
           'Envia um email com o código de redefinição de senha para a pessoa associada ao email fornecido. Retorna o código de redefinição gerado para fins de teste.',
         body: z.object({

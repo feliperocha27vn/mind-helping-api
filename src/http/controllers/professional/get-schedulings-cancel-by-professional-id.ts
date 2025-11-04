@@ -11,6 +11,7 @@ export const getSchedulingsCancelByProfessionalId: FastifyPluginAsyncZod =
       {
         schema: {
           tags: ['Professionals'],
+          summary: 'Obter número de cancelamentos',
           description:
             'Retorna o número de cancelamentos de agendamentos para um profissional no intervalo especificado (startDay → endDay). Útil para métricas e relatórios.',
           params: z.object({

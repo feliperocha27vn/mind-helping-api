@@ -10,6 +10,7 @@ export const getCvvCallsByPersonId: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['CvvCalls'],
+        summary: 'Listar ligações CVV do usuário',
         description: 'Obtém todos os CVV Calls para o usuário especificado.',
         params: z.object({
           userId: z.uuid(),

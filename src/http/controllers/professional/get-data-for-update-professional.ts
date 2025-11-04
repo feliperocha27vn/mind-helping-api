@@ -10,6 +10,9 @@ export const getDataForUpdateProfessional: FastifyPluginAsyncZod =
       {
         schema: {
           tags: ['Professionals'],
+          summary: 'Obter dados para atualizar profissional',
+          description:
+            'Fornece os dados necessários para preencher o formulário de edição do profissional (dados pessoais, endereço e informações profissionais).',
           params: z.object({
             professionalId: z.uuid(),
           }),

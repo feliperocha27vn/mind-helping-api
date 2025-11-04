@@ -9,6 +9,7 @@ export const createSchedule: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Schedules'],
+        summary: 'Criar horários para profissional',
         description:
           'Cria horários (schedules) para um profissional. Recebe `professionalPersonId` nos parâmetros e um array de objetos de schedule no body (cada item com horários, intervalo, política de cancelamento, valor médio e observações). Retorna 201 em caso de sucesso.',
         params: z.object({

@@ -9,6 +9,7 @@ export const getDataForUpdateUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users'],
+        summary: 'Obter dados para atualizar usuário',
         description:
           'Fornece os dados necessários para preencher o formulário de edição do usuário (dados pessoais e de endereço) para o `userId` especificado.',
         params: z.object({

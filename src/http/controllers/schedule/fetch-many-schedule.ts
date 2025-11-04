@@ -9,6 +9,7 @@ export const fetchManySchedule: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Schedules'],
+        summary: 'Listar horários do profissional',
         description:
           'Recupera os schedules (horários criados) de um profissional especificado por `professionalId`. Fornece detalhes como intervalo, política de cancelamento e valores médios.',
         params: z.object({

@@ -9,6 +9,7 @@ export const updateUser: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Users'],
+        summary: 'Atualizar dados do usuário',
         description:
           'Atualiza os dados do usuário especificado por `userId`. Permite atualização parcial dos campos pessoais e de contato; retorna 204 em sucesso e 404 quando o usuário não existe.',
         params: z.object({

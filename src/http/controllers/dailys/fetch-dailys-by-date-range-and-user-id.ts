@@ -11,6 +11,9 @@ export const fetchDailysByDateRangeAndUserId: FastifyPluginAsyncZod =
       {
         schema: {
           tags: ['Dailys'],
+          summary: 'Listar diários por intervalo de datas',
+          description:
+            'Retorna todos os diários de um usuário dentro de um intervalo de datas especificado (startDay → endDay).',
           params: z.object({
             userId: z.uuid(),
           }),

@@ -9,6 +9,7 @@ export const getNumberPatients: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        summary: 'Obter número de pacientes',
         description:
           'Retorna o número de pacientes associados a um profissional (`professionalId`). Útil para métricas e relatórios. Retorna 200 com `numberPatients` ou 404 se o profissional não for encontrado.',
         params: z.object({

@@ -9,6 +9,7 @@ export const setCancelHourly: FastifyPluginAsyncZod = async app => {
     '/hourlies/:hourlyId',
     {
       schema: {
+        summary: 'Cancelar horário (hourly)',
         tags: ['Hourlies'],
         description:
           'Cancela um horário (hourly) específico, tornando-o disponível para novos agendamentos.',

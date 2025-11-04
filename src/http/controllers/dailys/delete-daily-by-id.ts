@@ -9,6 +9,9 @@ export const deleteDailyByIdUseCase: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Dailys'],
+        summary: 'Deletar diário',
+        description:
+          'Remove um diário específico do usuário. Retorna 204 em sucesso.',
         params: z.object({
           userId: z.uuid(),
           dailyId: z.uuid(),

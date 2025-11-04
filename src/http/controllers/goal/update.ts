@@ -10,6 +10,7 @@ export const update: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        summary: 'Atualizar meta',
         description:
           'Atualiza uma meta (goal) do usuário. Recebe `goalId` e `personId` nos parâmetros e campos opcionais no corpo (ex.: description, numberDays). Retorna 200 em sucesso.',
         params: z.object({

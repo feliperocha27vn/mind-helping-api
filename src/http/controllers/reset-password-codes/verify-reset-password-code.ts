@@ -11,6 +11,7 @@ export const verifyResetPasswordCode: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Reset Password Codes'],
+        summary: 'Verificar código de redefinição de senha',
         description:
           'Verifica o código de redefinição de senha fornecido para a pessoa associada ao email.',
         body: z.object({

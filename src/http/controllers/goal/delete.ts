@@ -10,6 +10,7 @@ export const deleteGoal: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        summary: 'Deletar meta',
         description:
           'Remove uma meta (goal) pertencente a um usuário. Forneça `goalId` e `personId` como parâmetros. Retorna 204 em sucesso, 404 se não encontrado.',
         params: z.object({

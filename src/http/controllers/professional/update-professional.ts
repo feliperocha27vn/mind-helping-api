@@ -9,6 +9,7 @@ export const updateProfessional: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Professionals'],
+        summary: 'Atualizar dados do profissional',
         description:
           'Atualiza os dados do profissional especificado por `professionalId`. Permite atualização parcial dos campos pessoais e de contato; retorna 204 em sucesso e 404 quando o profissional não existe.',
         params: z.object({

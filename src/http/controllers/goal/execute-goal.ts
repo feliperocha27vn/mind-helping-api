@@ -9,6 +9,7 @@ export const executeGoal: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['Goal'],
+        summary: 'Executar meta',
         description:
           'Marca uma meta como executada (execute). Forneça `goalId` e `personId` nos parâmetros de rota. Retorna 200 em sucesso, 404 se recursos não forem encontrados.',
         params: z.object({

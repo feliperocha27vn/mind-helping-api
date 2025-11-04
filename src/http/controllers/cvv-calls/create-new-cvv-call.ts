@@ -9,6 +9,7 @@ export const createNewCvvCall: FastifyPluginAsyncZod = async app => {
     {
       schema: {
         tags: ['CvvCalls'],
+        summary: 'Criar nova ligação CVV',
         description: 'Cria um novo CVV Call para o usuário especificado.',
         params: z.object({
           userId: z.uuid(),
