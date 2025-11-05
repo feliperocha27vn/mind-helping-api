@@ -24,6 +24,7 @@ export const getSchedulingByUserId: FastifyPluginAsyncZod = async app => {
               emailProfessional: z.string(),
               date: z.date(),
               hour: z.string(),
+              hourlyId: z.string(),
               address: z.object({
                 street: z.string(),
                 neighborhood: z.string(),

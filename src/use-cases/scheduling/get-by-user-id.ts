@@ -15,6 +15,7 @@ interface GetSchedulingUseCaseResponse {
     emailProfessional: string
     date: Date
     hour: string
+    hourlyId: string
     address: {
       street: string
       neighborhood: string
@@ -63,6 +64,7 @@ export class GetSchedulingUseCase {
       emailProfessional: professional.email,
       date: hourly.date,
       hour: hourly.hour,
+      hourlyId: hourly.id,
       address: {
         street: professional.address,
         neighborhood: professional.neighborhood,
