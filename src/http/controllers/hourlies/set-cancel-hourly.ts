@@ -6,7 +6,7 @@ import z from 'zod'
 
 export const setCancelHourly: FastifyPluginAsyncZod = async app => {
   app.patch(
-    '/hourlies/:hourlyId',
+    '/hourlies/:hourlyId/:schedulingId',
     {
       schema: {
         summary: 'Cancelar horário (hourly)',
