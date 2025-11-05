@@ -99,4 +99,17 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
     return numberCancelSchedulings
   }
+
+  async setCancelScheduling(schedulingId: string) {
+    const scheduling = this.items.find(item => item.id === schedulingId)
+
+    if (!scheduling) {
+      return null
+    }
+
+    scheduling.isCanceled = true
+    scheduling.updatedAt = new Date()
+
+    return scheduling
+  }
 }

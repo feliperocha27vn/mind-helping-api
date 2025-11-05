@@ -15,6 +15,7 @@ export const setCancelHourly: FastifyPluginAsyncZod = async app => {
           'Cancela um horário (hourly) específico, tornando-o disponível para novos agendamentos.',
         params: z.object({
           hourlyId: z.uuid(),
+          schedulingId: z.uuid(),
         }),
         response: {
           204: z.void(),
@@ -28,13 +29,14 @@ export const setCancelHourly: FastifyPluginAsyncZod = async app => {
       },
     },
     async (request, reply) => {
-      const { hourlyId } = request.params
+      const { hourlyId, schedulingId } = request.params
 
       const setCancelHourlyUseCase = makeSetCancelHourlyUseCase()
 
       try {
         await setCancelHourlyUseCase.execute({
           hourlyId,
+          schedulingId,
         })
 
         return reply.status(204).send()

@@ -68,4 +68,13 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
     return schedulingsCancel
   }
+
+  async setCancelScheduling(schedulingId: string) {
+    const scheduling = await prisma.scheduling.update({
+      where: { id: schedulingId },
+      data: { isCanceled: true },
+    })
+
+    return scheduling
+  }
 }

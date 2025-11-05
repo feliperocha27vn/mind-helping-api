@@ -14,4 +14,5 @@ export interface SchedulingRepository {
     startDay: Date,
     endDay: Date
   ): Promise<number | null>
+  setCancelScheduling(schedulingId: string): Promise<Scheduling | null>
 }
