@@ -15,7 +15,7 @@ export interface SchedulingRepository {
     endDay: Date
   ): Promise<number | null>
   setCancelScheduling(schedulingId: string): Promise<Scheduling | null>
-  getSchedulingByProfessionalId(
+  fetchSchedulingByProfessionalId(
     professionalId: string,
     startDay: Date,
     endDay: Date

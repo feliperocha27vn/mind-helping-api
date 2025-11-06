@@ -112,4 +112,26 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
     return scheduling
   }
+
+  async fetchSchedulingByProfessionalId(
+    professionalId: string,
+    startDay: Date,
+    endDay: Date
+  ) {
+    const schedulingsByDate = this.items.filter(item => {
+      const professionalMatch = item.professionalPersonId === professionalId
+      const dateInRange = isWithinInterval(item.createdAt, {
+        start: startDay,
+        end: endDay,
+      })
+
+      return professionalMatch && dateInRange
+    })
+
+    if (schedulingsByDate.length === 0) {
+      return []
+    }
+
+    return schedulingsByDate
+  }
 }

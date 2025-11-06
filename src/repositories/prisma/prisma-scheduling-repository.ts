@@ -77,4 +77,22 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
     return scheduling
   }
+
+  async fetchSchedulingByProfessionalId(
+    professionalId: string,
+    startDay: Date,
+    endDay: Date
+  ) {
+    const schedulings = await prisma.scheduling.findMany({
+      where: {
+        professionalPersonId: professionalId,
+        createdAt: {
+          gte: startDay,
+          lte: endDay,
+        },
+      },
+    })
+
+    return schedulings
+  }
 }
