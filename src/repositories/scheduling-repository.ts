@@ -20,4 +20,6 @@ export interface SchedulingRepository {
     startDay: Date,
     endDay: Date
   ): Promise<Scheduling[]>
+  getById(schedulingId: string): Promise<Scheduling | null>
+  onFinishedConsultation(schedulingId: string): Promise<void>
 }

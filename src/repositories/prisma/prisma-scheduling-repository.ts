@@ -95,4 +95,19 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
     return schedulings
   }
+
+  async getById(schedulingId: string) {
+    const scheduling = await prisma.scheduling.findUnique({
+      where: { id: schedulingId },
+    })
+
+    return scheduling
+  }
+
+  async onFinishedConsultation(schedulingId: string) {
+    await prisma.scheduling.update({
+      where: { id: schedulingId },
+      data: { onFinishedConsultation: true },
+    })
+  }
 }

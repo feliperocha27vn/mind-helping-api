@@ -13,6 +13,7 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
       professionalPersonId: data.professionalPersonId,
       userPersonId: data.userPersonId,
       isCanceled: data.isCanceled ?? false,
+      onFinishedConsultation: data.onFinishedConsultation ?? false,
       createdAt: new Date(),
       updatedAt: new Date(),
     }
@@ -133,5 +134,26 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
     }
 
     return schedulingsByDate
+  }
+
+  async getById(schedulingId: string) {
+    const scheduling = this.items.find(item => item.id === schedulingId)
+
+    if (!scheduling) {
+      return null
+    }
+
+    return scheduling
+  }
+
+  async onFinishedConsultation(schedulingId: string): Promise<void> {
+    const scheduling = this.items.find(item => item.id === schedulingId)
+
+    if (!scheduling) {
+      return
+    }
+
+    scheduling.onFinishedConsultation = true
+    scheduling.updatedAt = new Date()
   }
 }
