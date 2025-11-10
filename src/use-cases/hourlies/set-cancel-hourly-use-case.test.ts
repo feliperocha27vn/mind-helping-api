@@ -2,8 +2,10 @@ import { InMemoryHourlyRepository } from '@/in-memory-repository/in-memory-hourl
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
 import { InMemoryScheduleRepository } from '@/in-memory-repository/in-memory-schedule-repository'
+import { InMemorySchedulingRepository } from '@/in-memory-repository/in-memory-scheduling-repository'
 import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
+import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import { CreateScheduleUseCase } from '@/use-cases/schedule/create'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SetCancelHourlyUseCase } from './set-cancel-hourly-use-case'
@@ -12,6 +14,7 @@ let hourlyRepository: HourlyRepository
 let scheduleRepository: ScheduleRepository
 let personRepository: InMemoryPersonRepository
 let professionalRepository: InMemoryProfessionalRepository
+let schedulingsRepository: SchedulingRepository
 let createScheduleUseCase: CreateScheduleUseCase
 let sut: SetCancelHourlyUseCase
 
@@ -19,6 +22,7 @@ describe('Set cancel hourly use case', () => {
   beforeEach(() => {
     hourlyRepository = new InMemoryHourlyRepository()
     scheduleRepository = new InMemoryScheduleRepository()
+    schedulingsRepository = new InMemorySchedulingRepository()
     personRepository = new InMemoryPersonRepository()
     professionalRepository = new InMemoryProfessionalRepository(
       personRepository
@@ -28,7 +32,7 @@ describe('Set cancel hourly use case', () => {
       hourlyRepository,
       professionalRepository
     )
-    sut = new SetCancelHourlyUseCase(hourlyRepository)
+    sut = new SetCancelHourlyUseCase(hourlyRepository, schedulingsRepository)
 
     vi.useFakeTimers()
   })
