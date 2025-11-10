@@ -43,6 +43,11 @@ app.register(fastifySwaggerUi, {
   routePrefix: '/docs',
 })
 
+// Health check endpoint for load balancers (Fly.io, etc)
+app.get('/health', async () => {
+  return { status: 'ok', timestamp: new Date().toISOString() }
+})
+
 app.register(personRoutes)
 app.register(routesProfessional)
 app.register(routesGoal)
