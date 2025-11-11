@@ -16,6 +16,7 @@ interface GetSchedulingUseCaseResponse {
     date: Date
     hour: string
     hourlyId: string
+    isCanceled: boolean
     address: {
       street: string
       neighborhood: string
@@ -65,6 +66,7 @@ export class GetSchedulingUseCase {
       date: hourly.date,
       hour: hourly.hour,
       hourlyId: hourly.id,
+      isCanceled: scheduling.isCanceled,
       address: {
         street: professional.address,
         neighborhood: professional.neighborhood,
