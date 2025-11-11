@@ -15,6 +15,7 @@ interface FetchSchedulingsByProfessionalIdUseCaseRequest {
 
 interface FetchSchedulingsByProfessionalIdUseCaseReply {
   schedulings: {
+    pacientId: string
     schedulingId: string
     namePacient: string
     hour: string
@@ -95,6 +96,7 @@ export class FetchSchedulingsByProfessionalIdUseCase {
           schedulingId: scheduling.id,
           namePacient: person.name,
           hour: hourly.hour,
+          pacientId: user.person_id,
         }
       })
     )

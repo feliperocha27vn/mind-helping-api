@@ -24,6 +24,7 @@ export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
             200: z.object({
               schedulings: z
                 .object({
+                  pacientId: z.string(),
                   schedulingId: z.string(),
                   namePacient: z.string(),
                   hour: z.string(),
