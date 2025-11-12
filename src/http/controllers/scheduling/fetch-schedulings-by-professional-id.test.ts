@@ -29,7 +29,7 @@ describe('Fetch schedulings by professional id', () => {
     initialTime.setUTCHours(9, 0, 0, 0)
 
     const endTime = new Date(futureDate)
-    endTime.setUTCHours(18, 0, 0, 0)
+    endTime.setUTCHours(19, 0, 0, 0)
 
     const { hourlies } = await createHourlies(
       schedule.id,
@@ -38,24 +38,36 @@ describe('Fetch schedulings by professional id', () => {
       schedule.interval
     )
 
-    await prisma.scheduling.create({
-      data: {
-        professionalPersonId: professional.person_id,
-        hourlyId: hourlies[0].id,
-        userPersonId: user.person_id,
-        createdAt: addMonths(new Date(), 1),
-      },
-    })
+    const { hourlies: hourlies2 } = await createHourlies(
+      schedule.id,
+      initialTime,
+      endTime,
+      schedule.interval
+    )
+
+    const allHourlies = [...hourlies, ...hourlies2]
+
+    for (const hourly of allHourlies) {
+      await prisma.scheduling.create({
+        data: {
+          professionalPersonId: professional.person_id,
+          hourlyId: hourly.id,
+          userPersonId: user.person_id,
+          createdAt: addMonths(new Date(), 1),
+        }
+      })
+    }
 
     const reply = await request(app.server)
       .get(
-        `/schedulings/professional/${professional.person_id}?startDate=2025-12-01&endDate=2025-12-30`
+        `/schedulings/professional/${professional.person_id}?startDate=2025-12-01&endDate=2025-12-30&page=2`
       )
       .send({
         professionalPersonId: professional.person_id,
       })
 
+
     expect(reply.statusCode).toEqual(200)
-    expect(reply.body.schedulings).toHaveLength(1)
+    expect(reply.body.schedulings).toHaveLength(10)
   })
 })

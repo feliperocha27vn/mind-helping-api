@@ -19,6 +19,7 @@ export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
           querystring: z.object({
             startDate: z.coerce.date(),
             endDate: z.coerce.date(),
+            page: z.coerce.number().min(1).default(1),
           }),
           response: {
             200: z.object({
@@ -39,7 +40,7 @@ export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
       },
       async (request, reply) => {
         const { professionalId } = request.params
-        const { startDate, endDate } = request.query
+        const { startDate, endDate, page } = request.query
 
         const fetchSchedulingsByProfessionalIdUseCase =
           makeFetchSchedulingsByProfessionalIdUseCase()
@@ -50,6 +51,7 @@ export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
               professionalId,
               startDay: startDate,
               endDay: endDate,
+              page,
             })
 
           return reply.status(200).send({ schedulings })

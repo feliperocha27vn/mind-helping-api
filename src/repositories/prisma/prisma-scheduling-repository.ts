@@ -81,7 +81,8 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
   async fetchSchedulingByProfessionalId(
     professionalId: string,
     startDay: Date,
-    endDay: Date
+    endDay: Date,
+    page: number
   ) {
     const schedulings = await prisma.scheduling.findMany({
       where: {
@@ -91,6 +92,8 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
           lte: endDay,
         },
       },
+      take: 10,
+      skip: (page - 1) * 10,
     })
 
     return schedulings

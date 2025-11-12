@@ -117,7 +117,8 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
   async fetchSchedulingByProfessionalId(
     professionalId: string,
     startDay: Date,
-    endDay: Date
+    endDay: Date,
+    page: number
   ) {
     const schedulingsByDate = this.items.filter(item => {
       const professionalMatch = item.professionalPersonId === professionalId
@@ -127,7 +128,7 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
       })
 
       return professionalMatch && dateInRange
-    })
+    }).slice((page - 1) * 10, page * 10)
 
     if (schedulingsByDate.length === 0) {
       return []
