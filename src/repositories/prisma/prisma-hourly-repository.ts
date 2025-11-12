@@ -116,4 +116,12 @@ export class PrismaHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async create(data: Prisma.HourlyUncheckedCreateInput) {
+    const hourly = await prisma.hourly.create({
+      data,
+    })
+
+    return hourly
+  }
 }

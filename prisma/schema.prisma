@@ -98,7 +98,7 @@ model Schedule {
   professionalPersonId String       @map("professional_person_id")
   initialTime          DateTime?    @map("initial_time")
   endTime              DateTime?    @map("end_time")
-  interval             Int
+  interval             Int?
   cancellationPolicy   Int          @map("cancellation_policy")
   averageValue         Decimal      @map("average_value")
   observation          String?

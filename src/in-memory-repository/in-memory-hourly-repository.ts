@@ -98,4 +98,18 @@ export class InMemoryHourlyRepository implements HourlyRepository {
 
     return hourly
   }
+
+  async create(data: Prisma.HourlyUncheckedCreateInput){
+      const hourly = {
+        id: data.id ?? randomUUID(),
+        scheduleId: data.scheduleId,
+        date: new Date(data.date ?? new Date()),
+        hour: data.hour,
+        isOcuped: data.isOcuped ?? false,
+      }
+
+      this.items.push(hourly)
+
+      return hourly
+  }
 }

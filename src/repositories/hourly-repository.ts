@@ -13,4 +13,5 @@ export interface HourlyRepository {
   updateStatusOcuped(hourlyId: string): Promise<Hourly | null>
   getById(id: string): Promise<Hourly | null>
   setCancelHourly(hourlyId: string): Promise<Hourly | null>
+  create(data: Prisma.HourlyUncheckedCreateInput): Promise<Hourly>
 }

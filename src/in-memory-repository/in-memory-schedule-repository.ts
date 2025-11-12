@@ -12,7 +12,7 @@ export class InMemoryScheduleRepository implements ScheduleRepository {
       professionalPersonId: data.professionalPersonId ?? randomUUID(),
       initialTime: new Date(data.initialTime ?? new Date()),
       endTime: new Date(data.endTime ?? new Date()),
-      interval: data.interval,
+      interval: data.interval ?? 0,
       cancellationPolicy: data.cancellationPolicy,
       averageValue: new Prisma.Decimal(data.averageValue.toString()),
       observation: data.observation ?? '',
