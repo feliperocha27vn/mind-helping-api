@@ -23,4 +23,9 @@ export interface SchedulingRepository {
   ): Promise<Scheduling[]>;
   getById(schedulingId: string): Promise<Scheduling | null>;
   onFinishedConsultation(schedulingId: string): Promise<void>;
+  getSchedulingsByMonth(
+    professionalId: string,
+    initialMonth: Date,
+    finalMonth: Date,
+  ): Promise<number | null>
 }

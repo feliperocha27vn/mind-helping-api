@@ -20,6 +20,7 @@ interface FetchSchedulingsByProfessionalIdUseCaseReply {
     schedulingId: string;
     namePacient: string;
     hour: string;
+    schedulingData: Date;
   }[];
 }
 
@@ -29,7 +30,7 @@ export class FetchSchedulingsByProfessionalIdUseCase {
     private personRepository: PersonRepository,
     private usersRepository: UserRepository,
     private hourlyRepository: HourlyRepository,
-  ) {}
+  ) { }
 
   async execute({
     professionalId,
@@ -102,6 +103,7 @@ export class FetchSchedulingsByProfessionalIdUseCase {
           namePacient: person.name,
           hour: hourly.hour,
           pacientId: user.person_id,
+          schedulingData: hourly.date,
         };
       }),
     );
