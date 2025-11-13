@@ -66,7 +66,7 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
       return professionalMatch && dateInRange
     })
 
-    const schedulingsCount = schedulingsByDate.length
+    const schedulingsCount = schedulingsByDate.filter(item => item.onFinishedConsultation === true).length
 
     if (schedulingsCount === 0) {
       return null

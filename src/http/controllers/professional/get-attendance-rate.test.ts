@@ -32,7 +32,7 @@ describe('Get attendance rate by professional id', () => {
       schedule.id,
       initialTime,
       endTime,
-      schedule.interval
+      schedule.interval ?? 0
     )
 
     await prisma.scheduling.create({
@@ -51,6 +51,7 @@ describe('Get attendance rate by professional id', () => {
         userPersonId: user.person_id,
         hourlyId: hourlies[1].id,
         createdAt: new Date('2025-10-12T10:00:00'),
+        onFinishedConsultation: true
       },
     })
 
@@ -60,6 +61,7 @@ describe('Get attendance rate by professional id', () => {
         userPersonId: user.person_id,
         hourlyId: hourlies[2].id,
         createdAt: new Date('2025-10-12T10:00:00'),
+        onFinishedConsultation: true
       },
     })
 

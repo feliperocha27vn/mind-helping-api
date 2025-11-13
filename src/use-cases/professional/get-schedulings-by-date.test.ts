@@ -63,12 +63,14 @@ describe('Get schedulings by date use case', () => {
       hourlyId: 'hourly-01',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-01',
+      onFinishedConsultation: true,
     })
 
     await schedulingRepository.create({
       hourlyId: 'hourly-02',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
+      onFinishedConsultation: true,
     })
 
     const { schedulingsCount } = await sut.execute({
@@ -221,6 +223,7 @@ describe('Get schedulings by date use case', () => {
       hourlyId: 'hourly-01',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-01',
+      onFinishedConsultation: true,
     })
 
     vi.setSystemTime(new Date('2024-06-20T14:00:00'))
@@ -229,6 +232,7 @@ describe('Get schedulings by date use case', () => {
       hourlyId: 'hourly-02',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
+      onFinishedConsultation: true,
     })
 
     const { schedulingsCount } = await sut.execute({

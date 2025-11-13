@@ -3,6 +3,7 @@ import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import { validateDateTime } from '@/utils/validate-date-time'
+import { count } from 'node:console'
 
 interface GetAttendanceRateUseCaseRequest {
   professionalId: string
@@ -18,7 +19,7 @@ export class GetAttendanceRateUseCase {
   constructor(
     private schedulingRepository: SchedulingRepository,
     private professionalRepository: ProfessionalRepository
-  ) {}
+  ) { }
 
   async execute({
     professionalId,
@@ -81,8 +82,10 @@ export class GetAttendanceRateUseCase {
       }
     }
 
+    const countAllSchedulingsCompletedAndCanceled = countSchedulings + countCanceledSchedulings
+
     const attendanceRate = (
-      ((countSchedulings - countCanceledSchedulings) / countSchedulings) *
+      ((countAllSchedulingsCompletedAndCanceled - countCanceledSchedulings) / countAllSchedulingsCompletedAndCanceled) *
       100
     ).toFixed(0)
 

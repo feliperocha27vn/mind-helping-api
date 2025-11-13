@@ -38,6 +38,7 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
   ) {
     const schedulings = await prisma.scheduling.findMany({
       where: {
+        onFinishedConsultation: true,
         professionalPersonId: professionalId,
         createdAt: {
           gte: startDay,

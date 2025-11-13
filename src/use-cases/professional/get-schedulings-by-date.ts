@@ -18,7 +18,7 @@ export class GetSchedulingsByDateUseCase {
   constructor(
     private schedulingRepository: SchedulingRepository,
     private professionalRepository: ProfessionalRepository
-  ) {}
+  ) { }
 
   async execute({
     professionalId,

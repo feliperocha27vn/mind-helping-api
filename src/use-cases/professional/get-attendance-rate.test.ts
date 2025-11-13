@@ -59,7 +59,6 @@ describe('Get attendance schedulings rate use case', () => {
       voluntary: false,
     })
 
-    // Criar agendamentos em datas diferentes dentro do range
     await schedulingRepository.create({
       hourlyId: 'hourly-01',
       professionalPersonId: professional.person_id,
@@ -71,6 +70,7 @@ describe('Get attendance schedulings rate use case', () => {
       hourlyId: 'hourly-01',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-01',
+      onFinishedConsultation: true,
     })
 
     vi.setSystemTime(new Date('2024-06-20T14:00:00'))
@@ -79,6 +79,7 @@ describe('Get attendance schedulings rate use case', () => {
       hourlyId: 'hourly-02',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
+      onFinishedConsultation: true,
     })
 
     vi.setSystemTime(new Date('2024-06-25T14:00:00'))
@@ -87,6 +88,7 @@ describe('Get attendance schedulings rate use case', () => {
       hourlyId: 'hourly-02',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
+      onFinishedConsultation: true,
     })
 
     const { attendanceRate } = await sut.execute({
