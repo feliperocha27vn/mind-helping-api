@@ -1,31 +1,21 @@
-import type { Prisma, Scheduling } from "@prisma/client";
+import type { Prisma, Scheduling } from '@prisma/client'
 
 export interface SchedulingRepository {
-  create(data: Prisma.SchedulingUncheckedCreateInput): Promise<Scheduling>;
-  getByUserId(userId: string): Promise<Scheduling | null>;
-  getPatientsByProfessionalId(professionalId: string): Promise<number | null>;
+  create(data: Prisma.SchedulingUncheckedCreateInput): Promise<Scheduling>
+  getByUserId(userId: string): Promise<Scheduling | null>
+  getPatientsByProfessionalId(professionalId: string): Promise<number | null>
   getSchedulingsByDate(
     professionalId: string,
     startDay: Date,
-    endDay: Date,
-  ): Promise<number | null>;
+    endDay: Date
+  ): Promise<number | null>
   getShedulingsCancelByProfessionalId(
     professionalId: string,
     startDay: Date,
-    endDay: Date,
-  ): Promise<number | null>;
-  setCancelScheduling(schedulingId: string): Promise<Scheduling | null>;
-  fetchSchedulingByProfessionalId(
-    professionalId: string,
-    startDay: Date,
-    endDay: Date,
-    page: number,
-  ): Promise<Scheduling[]>;
-  getById(schedulingId: string): Promise<Scheduling | null>;
-  onFinishedConsultation(schedulingId: string): Promise<void>;
-  getSchedulingsByMonth(
-    professionalId: string,
-    initialMonth: Date,
-    finalMonth: Date,
+    endDay: Date
   ): Promise<number | null>
+  setCancelScheduling(schedulingId: string): Promise<Scheduling | null>
+  getById(schedulingId: string): Promise<Scheduling | null>
+  onFinishedConsultation(schedulingId: string): Promise<void>
+  getByHourlyId(hourlyId: string): Promise<Scheduling[]>
 }

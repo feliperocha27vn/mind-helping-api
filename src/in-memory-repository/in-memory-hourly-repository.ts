@@ -1,7 +1,7 @@
-import type { HourlyRepository } from '@/repositories/hourly-repository'
-import type { Hourly, Prisma } from '@prisma/client'
-import { addMinutes, isBefore } from 'date-fns'
 import { randomUUID } from 'node:crypto'
+import type { Hourly, Prisma } from '@prisma/client'
+import { addMinutes, isBefore, isWithinInterval } from 'date-fns'
+import type { HourlyRepository } from '@/repositories/hourly-repository'
 
 export class InMemoryHourlyRepository implements HourlyRepository {
   public items: Hourly[] = []
@@ -99,17 +99,42 @@ export class InMemoryHourlyRepository implements HourlyRepository {
     return hourly
   }
 
-  async create(data: Prisma.HourlyUncheckedCreateInput){
-      const hourly = {
-        id: data.id ?? randomUUID(),
-        scheduleId: data.scheduleId,
-        date: new Date(data.date ?? new Date()),
-        hour: data.hour,
-        isOcuped: data.isOcuped ?? false,
-      }
+  async create(data: Prisma.HourlyUncheckedCreateInput) {
+    const hourly = {
+      id: data.id ?? randomUUID(),
+      scheduleId: data.scheduleId,
+      date: new Date(data.date ?? new Date()),
+      hour: data.hour,
+      isOcuped: data.isOcuped ?? false,
+    }
 
-      this.items.push(hourly)
+    this.items.push(hourly)
 
-      return hourly
+    return hourly
+  }
+
+  async fetchManyByScheduleIdAndDate(
+    scheduleId: string,
+    startDate: Date,
+    endDate: Date,
+    page: number
+  ) {
+    const hourliesByDate = this.items
+      .filter(item => {
+        const scheduleIsMatch = item.scheduleId === scheduleId
+        const dateInRange = isWithinInterval(item.date, {
+          start: startDate,
+          end: endDate,
+        })
+
+        return scheduleIsMatch && dateInRange
+      })
+      .slice((page - 1) * 10, page * 10)
+
+    if (hourliesByDate.length === 0) {
+      return []
+    }
+
+    return hourliesByDate
   }
 }

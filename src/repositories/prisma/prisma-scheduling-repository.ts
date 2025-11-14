@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 import type { SchedulingRepository } from '../scheduling-repository'
 
 export class PrismaSchedulingRepository implements SchedulingRepository {
@@ -79,27 +79,6 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
     return scheduling
   }
 
-  async fetchSchedulingByProfessionalId(
-    professionalId: string,
-    startDay: Date,
-    endDay: Date,
-    page: number
-  ) {
-    const schedulings = await prisma.scheduling.findMany({
-      where: {
-        professionalPersonId: professionalId,
-        createdAt: {
-          gte: startDay,
-          lte: endDay,
-        },
-      },
-      take: 10,
-      skip: (page - 1) * 10,
-    })
-
-    return schedulings
-  }
-
   async getById(schedulingId: string) {
     const scheduling = await prisma.scheduling.findUnique({
       where: { id: schedulingId },
@@ -113,5 +92,15 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
       where: { id: schedulingId },
       data: { onFinishedConsultation: true },
     })
+  }
+
+  async getByHourlyId(hourlyId: string) {
+    const schedulings = await prisma.scheduling.findMany({
+      where: {
+        hourlyId,
+      },
+    })
+
+    return schedulings
   }
 }

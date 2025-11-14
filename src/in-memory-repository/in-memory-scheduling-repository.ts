@@ -1,7 +1,7 @@
-import type { SchedulingRepository } from '@/repositories/scheduling-repository'
+import { randomUUID } from 'node:crypto'
 import type { Prisma, Scheduling } from '@prisma/client'
 import { isWithinInterval } from 'date-fns'
-import { randomUUID } from 'node:crypto'
+import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 
 export class InMemorySchedulingRepository implements SchedulingRepository {
   public items: Scheduling[] = []
@@ -66,7 +66,9 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
       return professionalMatch && dateInRange
     })
 
-    const schedulingsCount = schedulingsByDate.filter(item => item.onFinishedConsultation === true).length
+    const schedulingsCount = schedulingsByDate.filter(
+      item => item.onFinishedConsultation === true
+    ).length
 
     if (schedulingsCount === 0) {
       return null
@@ -114,29 +116,6 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
     return scheduling
   }
 
-  async fetchSchedulingByProfessionalId(
-    professionalId: string,
-    startDay: Date,
-    endDay: Date,
-    page: number
-  ) {
-    const schedulingsByDate = this.items.filter(item => {
-      const professionalMatch = item.professionalPersonId === professionalId
-      const dateInRange = isWithinInterval(item.createdAt, {
-        start: startDay,
-        end: endDay,
-      })
-
-      return professionalMatch && dateInRange
-    }).slice((page - 1) * 10, page * 10)
-
-    if (schedulingsByDate.length === 0) {
-      return []
-    }
-
-    return schedulingsByDate
-  }
-
   async getById(schedulingId: string) {
     const scheduling = this.items.find(item => item.id === schedulingId)
 
@@ -156,5 +135,11 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
     scheduling.onFinishedConsultation = true
     scheduling.updatedAt = new Date()
+  }
+
+  async getByHourlyId(hourlyId: string) {
+    const schedulings = this.items.filter(item => item.hourlyId === hourlyId)
+
+    return schedulings
   }
 }

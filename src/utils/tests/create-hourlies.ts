@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prisma'
-import { addMinutes, isBefore } from 'date-fns'
 import { randomUUID } from 'node:crypto'
+import { addMinutes, isBefore } from 'date-fns'
+import { prisma } from '@/lib/prisma'
 
 export async function createHourlies(
   scheduleId: string,
@@ -9,6 +9,7 @@ export async function createHourlies(
   interval: number
 ) {
   const slotsData = []
+  const createdIds: string[] = []
   let currentTime = new Date(initialTime)
 
   while (isBefore(currentTime, endTime)) {
@@ -16,8 +17,11 @@ export async function createHourlies(
     const hourUTC = currentTime.getUTCHours().toString().padStart(2, '0')
     const minuteUTC = currentTime.getUTCMinutes().toString().padStart(2, '0')
 
+    const hourlyId = randomUUID()
+    createdIds.push(hourlyId)
+
     slotsData.push({
-      id: randomUUID(),
+      id: hourlyId,
       isOcuped: false,
       date: new Date(currentTime),
       hour: `${hourUTC}:${minuteUTC}`,
@@ -30,9 +34,12 @@ export async function createHourlies(
     data: slotsData,
   })
 
+  // Retorna apenas os hourlies que foram criados nesta chamada
   const hourlies = await prisma.hourly.findMany({
     where: {
-      scheduleId,
+      id: {
+        in: createdIds,
+      },
     },
   })
 

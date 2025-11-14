@@ -14,4 +14,10 @@ export interface HourlyRepository {
   getById(id: string): Promise<Hourly | null>
   setCancelHourly(hourlyId: string): Promise<Hourly | null>
   create(data: Prisma.HourlyUncheckedCreateInput): Promise<Hourly>
+  fetchManyByScheduleIdAndDate(
+    scheduleId: string,
+    startDate: Date,
+    endDate: Date,
+    page: number
+  ): Promise<Hourly[]>
 }

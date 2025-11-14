@@ -1,20 +1,20 @@
-import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
-import { makeFetchSchedulingsByProfessionalIdUseCase } from '@/factories/scheduling/make-fetch-schedulings-by-professional-id-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import { makeFetchManySchedulingsByScheduleIdUseCase } from '@/factories/scheduling/make-fetch-many-schedulings-by-schedule-id-use-case'
 
-export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
+export const fetchManySchedulingsByScheduleId: FastifyPluginAsyncZod =
   async app => {
     app.get(
-      '/schedulings/professional/:professionalId',
+      '/schedulings/schedule/:scheduleId',
       {
         schema: {
           tags: ['Schedulings'],
           summary: 'Listar agendamentos por ID de profissional',
           description:
-            'Lista agendamentos disponíveis para um dado `professionalId`. Retorna um array de agendamentos com status de ocupação e informações da data.',
+            'Lista agendamentos disponíveis para um dado `scheduleId`. Retorna um array de agendamentos com status de ocupação e informações da data.',
           params: z.object({
-            professionalId: z.uuid(),
+            scheduleId: z.uuid(),
           }),
           querystring: z.object({
             startDate: z.coerce.date(),
@@ -39,16 +39,16 @@ export const fetchSchedulingsByProfessionalId: FastifyPluginAsyncZod =
         },
       },
       async (request, reply) => {
-        const { professionalId } = request.params
+        const { scheduleId } = request.params
         const { startDate, endDate, page } = request.query
 
-        const fetchSchedulingsByProfessionalIdUseCase =
-          makeFetchSchedulingsByProfessionalIdUseCase()
+        const fetchManySchedulingsByScheduleIdUseCase =
+          makeFetchManySchedulingsByScheduleIdUseCase()
 
         try {
           const { schedulings } =
-            await fetchSchedulingsByProfessionalIdUseCase.execute({
-              professionalId,
+            await fetchManySchedulingsByScheduleIdUseCase.execute({
+              scheduleId,
               startDay: startDate,
               endDay: endDate,
               page,

@@ -1,7 +1,7 @@
-import { prisma } from '@/lib/prisma'
+import { randomUUID } from 'node:crypto'
 import type { Prisma } from '@prisma/client'
 import { addMinutes, isBefore } from 'date-fns'
-import { randomUUID } from 'node:crypto'
+import { prisma } from '@/lib/prisma'
 import type { HourlyRepository } from '../hourly-repository'
 
 export class PrismaHourlyRepository implements HourlyRepository {
@@ -123,5 +123,26 @@ export class PrismaHourlyRepository implements HourlyRepository {
     })
 
     return hourly
+  }
+
+  async fetchManyByScheduleIdAndDate(
+    scheduleId: string,
+    startDate: Date,
+    endDate: Date,
+    page: number
+  ) {
+    const hourlies = await prisma.hourly.findMany({
+      where: {
+        scheduleId,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      skip: (page - 1) * 10,
+      take: 10,
+    })
+
+    return hourlies
   }
 }
