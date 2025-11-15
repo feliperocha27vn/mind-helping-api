@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client'
+import { getMonth } from 'date-fns'
 import { prisma } from '@/lib/prisma'
 import type { SchedulingRepository } from '../scheduling-repository'
 
@@ -38,7 +39,6 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
   ) {
     const schedulings = await prisma.scheduling.findMany({
       where: {
-        onFinishedConsultation: true,
         professionalPersonId: professionalId,
         createdAt: {
           gte: startDay,
@@ -102,5 +102,20 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
     })
 
     return schedulings
+  }
+
+  async getSchedulingsByMonth(professionalId: string, month: number) {
+    const schedulings = await prisma.scheduling.findMany({
+      where: {
+        professionalPersonId: professionalId,
+      },
+    })
+
+    const schedulingsByMonth = schedulings.filter(scheduling => {
+      const schedulingDate = new Date(scheduling.createdAt)
+      return getMonth(schedulingDate) === month
+    })
+
+    return schedulingsByMonth.length
   }
 }

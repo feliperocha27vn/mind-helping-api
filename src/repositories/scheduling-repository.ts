@@ -18,4 +18,5 @@ export interface SchedulingRepository {
   getById(schedulingId: string): Promise<Scheduling | null>
   onFinishedConsultation(schedulingId: string): Promise<void>
   getByHourlyId(hourlyId: string): Promise<Scheduling[]>
+  getSchedulingsByMonth(professionalId: string, month: number): Promise<number>
 }

@@ -1,13 +1,14 @@
-import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
-import { makeCreateNewHourlyUseCase } from '@/factories/schedule/make-create-new-hourly-use-case'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { ResourceNotFoundError } from '@/errors/resource-not-found-error'
+import { makeCreateNewHourlyUseCase } from '@/factories/schedule/make-create-new-hourly-use-case'
 
 export const createNewHourly: FastifyPluginAsyncZod = async app => {
   app.post(
     '/hourlies',
     {
       schema: {
+        tags: ['Hourlies'],
         body: z.object({
           scheduleId: z.string(),
           date: z.coerce.date(),
