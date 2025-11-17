@@ -130,7 +130,7 @@ model Scheduling {
 
 model Hourly {
   id         String       @id @default(uuid())
-  schedule   Schedule     @relation(fields: [scheduleId], references: [id])
+  schedule   Schedule     @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
   scheduleId String       @map("schedule_id")
   date       DateTime
   hour       String
