@@ -1,10 +1,10 @@
+import type { Schedule } from '@prisma/client'
+import { isValid } from 'date-fns'
 import { DateNotValidError } from '@/errors/date-not-valid'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
-import type { Schedule } from '@prisma/client'
-import { isValid } from 'date-fns'
 
 interface CreateScheduleUseCaseRequest {
   professionalPersonId: string
@@ -67,10 +67,6 @@ export class CreateScheduleUseCase {
           initialTime,
           endTime,
         })
-
-        if (scheduleItem.initialTime < new Date()) {
-          throw new DateNotValidError()
-        }
 
         if (schedule.isControlled) {
           const dateIsValid =
