@@ -4,7 +4,7 @@ import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
 import type { Schedule } from '@prisma/client'
-import { isBefore, isValid, subHours } from 'date-fns'
+import { addHours, isBefore, isValid } from 'date-fns'
 
 interface CreateScheduleUseCaseRequest {
   professionalPersonId: string
@@ -76,20 +76,20 @@ export class CreateScheduleUseCase {
             throw new DateNotValidError()
           }
 
-          // Normaliza para horário de Brasília (UTC-3)
-          // O frontend envia em UTC, mas representa horário local BRT
-          const initialTimeBRT = subHours(scheduleItem.initialTime, 3)
-          const currentTimeBRT = subHours(new Date(), 3)
+          // Normaliza para UTC correto
+          // O frontend envia "11:40:00.000Z" querendo dizer 11h40 BRT
+          // Precisamos converter para UTC real: 11h40 BRT = 14h40 UTC
+          const initialTimeUTC = addHours(scheduleItem.initialTime, 3)
 
-          if (isBefore(initialTimeBRT, currentTimeBRT)) {
+          if (isBefore(initialTimeUTC, new Date())) {
             throw new DateNotValidError()
           }
 
-          // Cria os horários usando as datas originais (já estão em UTC)
+          // Cria os horários usando as datas convertidas para UTC
           await this.hourlyRepository.createHourlySlots(
             schedule.id,
-            initialTime,
-            endTime,
+            initialTimeUTC,
+            addHours(endTime, 3),
             scheduleItem.interval
           )
         }
