@@ -47,4 +47,10 @@ export class InMemoryScheduleRepository implements ScheduleRepository {
 
     return schedules
   }
+
+  async delete(id: string) {
+    const itemIndex = this.items.findIndex(item => item.id === id)
+
+    this.items.splice(itemIndex, 1)
+  }
 }
