@@ -76,20 +76,20 @@ export class CreateScheduleUseCase {
             throw new DateNotValidError()
           }
 
-          // Normaliza para UTC correto
-          // O frontend envia "11:40:00.000Z" querendo dizer 11h40 BRT
-          // Precisamos converter para UTC real: 11h40 BRT = 14h40 UTC
+          // Valida se o horário não é retroativo
+          // O frontend envia "12:00:00.000Z" querendo dizer 12h00 BRT (horário local)
+          // Para validar, convertemos para UTC: 12h00 BRT = 15h00 UTC
           const initialTimeUTC = addHours(scheduleItem.initialTime, 3)
 
           if (isBefore(initialTimeUTC, new Date())) {
             throw new DateNotValidError()
           }
 
-          // Cria os horários usando as datas convertidas para UTC
+          // Salva os horários SEM conversão (mantém o horário que o frontend enviou)
           await this.hourlyRepository.createHourlySlots(
             schedule.id,
-            initialTimeUTC,
-            addHours(endTime, 3),
+            initialTime,
+            endTime,
             scheduleItem.interval
           )
         }
