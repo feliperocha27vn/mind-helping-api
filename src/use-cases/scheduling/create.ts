@@ -9,6 +9,7 @@ import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import type { UserRepository } from '@/repositories/user-repository'
 import { validateDateTime } from '@/utils/validate-date-time'
 import type { Scheduling } from '@prisma/client'
+import { isBefore, parse } from 'date-fns'
 
 interface CreateSchedulingUseCaseRequest {
   professionalPersonId: string
@@ -74,8 +75,14 @@ export class CreateSchedulingUseCase {
     if (!hourly) {
       throw new ResourceNotFoundError()
     }
+    
+    const schedulingDateTime = parse(
+      hourly.hour,
+      'HH:mm',
+      new Date(hourly.date)
+    )
 
-    if (hourly.date < new Date()) {
+    if (isBefore(schedulingDateTime, new Date())) {
       throw new DateNotValidError()
     }
 
