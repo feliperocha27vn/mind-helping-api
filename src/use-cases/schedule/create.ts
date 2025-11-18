@@ -4,7 +4,7 @@ import type { HourlyRepository } from '@/repositories/hourly-repository'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { ScheduleRepository } from '@/repositories/schedule-repository'
 import type { Schedule } from '@prisma/client'
-import { isBefore, isValid } from 'date-fns'
+import { isBefore, isValid, subHours } from 'date-fns'
 
 interface CreateScheduleUseCaseRequest {
   professionalPersonId: string
@@ -76,7 +76,12 @@ export class CreateScheduleUseCase {
             throw new DateNotValidError()
           }
 
-          if (isBefore(scheduleItem.initialTime, new Date())) {
+          // Normaliza para horário de Brasília (UTC-3)
+          // O frontend envia em UTC, mas representa horário local BRT
+          const initialTimeBRT = subHours(scheduleItem.initialTime, 3)
+          const currentTimeBRT = subHours(new Date(), 3)
+
+          if (isBefore(initialTimeBRT, currentTimeBRT)) {
             throw new DateNotValidError()
           }
 
