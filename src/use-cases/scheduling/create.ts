@@ -9,7 +9,7 @@ import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import type { UserRepository } from '@/repositories/user-repository'
 import { validateDateTime } from '@/utils/validate-date-time'
 import type { Scheduling } from '@prisma/client'
-import { isBefore, parse } from 'date-fns'
+import { addHours, isBefore, parse } from 'date-fns'
 
 interface CreateSchedulingUseCaseRequest {
   professionalPersonId: string
@@ -75,14 +75,20 @@ export class CreateSchedulingUseCase {
     if (!hourly) {
       throw new ResourceNotFoundError()
     }
-    
+
+    // Combina a data do horário com a hora para validar
     const schedulingDateTime = parse(
       hourly.hour,
       'HH:mm',
       new Date(hourly.date)
     )
 
-    if (isBefore(schedulingDateTime, new Date())) {
+    // Valida considerando timezone BRT (UTC-3)
+    // O horário no banco está em horário local (12:00 = meio-dia BRT)
+    // Para validar, convertemos para UTC: 12:00 BRT = 15:00 UTC
+    const schedulingDateTimeUTC = addHours(schedulingDateTime, 3)
+
+    if (isBefore(schedulingDateTimeUTC, new Date())) {
       throw new DateNotValidError()
     }
 
