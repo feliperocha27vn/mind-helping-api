@@ -114,7 +114,7 @@ describe('Get schedulings by date use case', () => {
       endDay: new Date('2024-07-31'),
     })
 
-    expect(schedulingsCount).toBeNull()
+    expect(schedulingsCount).toBe(0)
   })
 
   it('should not be able to get schedulings with invalid professionalId', async () => {

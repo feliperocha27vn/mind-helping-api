@@ -170,4 +170,91 @@ describe('Create schedule use case', () => {
 
     expect(schedule[0].averageValue.toNumber()).toEqual(0)
   })
+
+  it('should allow creating schedule for 10 minutes in the future', async () => {
+    vi.setSystemTime(new Date('2024-12-31T14:30:00'))
+
+    const person = await personRepository.create({
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const professional = await professionalRepository.create({
+      crp: '06/12345',
+      person_id: person.id,
+      voluntary: false,
+    })
+
+    const { schedule } = await sut.execute({
+      professionalPersonId: professional.person_id,
+      schedules: [
+        {
+          averageValue: 150,
+          cancellationPolicy: 24,
+          initialTime: new Date('2024-12-31T15:00:00'), // 30 minutos no futuro
+          endTime: new Date('2024-12-31T18:00:00'),
+          interval: 60,
+          isControlled: true,
+          observation: 'Atendimento presencial',
+        },
+      ],
+    })
+
+    expect(schedule).toEqual(expect.any(Array))
+    expect(schedule[0].id).toEqual(expect.any(String))
+  })
+
+  it('should not allow creating schedule for past time on same day', async () => {
+    vi.setSystemTime(new Date('2024-12-31T15:00:00'))
+
+    const person = await personRepository.create({
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos2@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const professional = await professionalRepository.create({
+      crp: '06/123456',
+      person_id: person.id,
+      voluntary: false,
+    })
+
+    await expect(() =>
+      sut.execute({
+        professionalPersonId: professional.person_id,
+        schedules: [
+          {
+            averageValue: 150,
+            cancellationPolicy: 24,
+            initialTime: new Date('2024-12-31T10:00:00'), // 10:00 está no passado (antes das 15:00)
+            endTime: new Date('2024-12-31T18:00:00'),
+            interval: 60,
+            isControlled: true,
+            observation: 'Atendimento presencial',
+          },
+        ],
+      })
+    ).rejects.toBeInstanceOf(DateNotValidError)
+  })
 })

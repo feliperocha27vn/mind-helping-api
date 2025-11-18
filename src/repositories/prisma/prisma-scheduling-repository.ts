@@ -1,6 +1,6 @@
+import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma/client'
 import { getMonth } from 'date-fns'
-import { prisma } from '@/lib/prisma'
 import type { SchedulingRepository } from '../scheduling-repository'
 
 export class PrismaSchedulingRepository implements SchedulingRepository {
@@ -44,6 +44,7 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
           gte: startDay,
           lte: endDay,
         },
+        isCanceled: false,
       },
       orderBy: {
         createdAt: 'asc',

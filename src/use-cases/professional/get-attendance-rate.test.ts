@@ -1,3 +1,5 @@
+import { DateNotValidError } from '@/errors/date-not-valid'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
 import { InMemorySchedulingRepository } from '@/in-memory-repository/in-memory-scheduling-repository'
@@ -6,8 +8,6 @@ import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import { hash } from 'bcryptjs'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { GetAttendanceRateUseCase } from './get-attendance-rate'
-import { PersonNotFoundError } from '@/errors/person-not-found'
-import { DateNotValidError } from '@/errors/date-not-valid'
 
 let personRepository: InMemoryPersonRepository
 let professionalRepository: ProfessionalRepository
@@ -67,7 +67,7 @@ describe('Get attendance schedulings rate use case', () => {
     })
 
     await schedulingRepository.create({
-      hourlyId: 'hourly-01',
+      hourlyId: 'hourly-02',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-01',
       onFinishedConsultation: true,
@@ -76,7 +76,7 @@ describe('Get attendance schedulings rate use case', () => {
     vi.setSystemTime(new Date('2024-06-20T14:00:00'))
 
     await schedulingRepository.create({
-      hourlyId: 'hourly-02',
+      hourlyId: 'hourly-03',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
       onFinishedConsultation: true,
@@ -85,7 +85,7 @@ describe('Get attendance schedulings rate use case', () => {
     vi.setSystemTime(new Date('2024-06-25T14:00:00'))
 
     await schedulingRepository.create({
-      hourlyId: 'hourly-02',
+      hourlyId: 'hourly-04',
       professionalPersonId: professional.person_id,
       userPersonId: 'user-02',
       onFinishedConsultation: true,

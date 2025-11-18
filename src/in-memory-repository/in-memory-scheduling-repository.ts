@@ -1,7 +1,7 @@
-import { randomUUID } from 'node:crypto'
+import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 import type { Prisma, Scheduling } from '@prisma/client'
 import { getMonth, isWithinInterval } from 'date-fns'
-import type { SchedulingRepository } from '@/repositories/scheduling-repository'
+import { randomUUID } from 'node:crypto'
 
 export class InMemorySchedulingRepository implements SchedulingRepository {
   public items: Scheduling[] = []
@@ -62,8 +62,9 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
         start: startDay,
         end: endDay,
       })
+      const notCanceled = !item.isCanceled
 
-      return professionalMatch && dateInRange
+      return professionalMatch && dateInRange && notCanceled
     })
 
     const schedulingsCount = schedulingsByDate.length
@@ -146,5 +147,9 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
     )
 
     return schedulings.length
+  }
+
+  async getSchedulingsByPatientId(patientId: string): Promise<Scheduling[]> {
+    return []
   }
 }

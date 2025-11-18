@@ -1,3 +1,4 @@
+import { DateNotValidError } from '@/errors/date-not-valid'
 import { InMemoryHourlyRepository } from '@/in-memory-repository/in-memory-hourly-repository'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
@@ -113,6 +114,163 @@ describe('Create scheduling use case', () => {
       scheduleId: schedule.id,
       date: '2024-12-31',
       hour: '10:00',
+    })
+
+    const hourly = await hourlyRepository.getById(scheduling.hourlyId)
+
+    expect(scheduling.id).toEqual(expect.any(String))
+    expect(hourly?.isOcuped).toBe(true)
+  })
+
+  it('should not allow scheduling for a past date and time', async () => {
+    vi.setSystemTime(new Date('2024-12-31T15:00:00'))
+
+    const professionalPerson = await personRepository.create({
+      id: 'person-01',
+      name: 'Dr. Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const professional = await professionalRepository.create({
+      person_id: professionalPerson.id,
+      crp: '123456789',
+      voluntary: false,
+    })
+
+    const userPerson = await personRepository.create({
+      id: 'person-02',
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos2@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const user = await userRepository.create({
+      gender: 'female',
+      person_id: userPerson.id,
+    })
+
+    const schedule = await scheduleRepository.create({
+      professionalPersonId: professional.person_id,
+      averageValue: 150,
+      cancellationPolicy: 24,
+      initialTime: new Date('2024-12-31T09:00:00.000Z'),
+      endTime: new Date('2024-12-31T18:00:00.000Z'),
+      interval: 60,
+      isControlled: true,
+      observation: 'Atendimento presencial',
+    })
+
+    await hourlyRepository.createHourlySlots(
+      schedule.id,
+      schedule.initialTime,
+      schedule.endTime,
+      schedule.interval
+    )
+
+    await expect(() =>
+      sut.execute({
+        professionalPersonId: professional.person_id,
+        userPersonId: user.person_id,
+        scheduleId: schedule.id,
+        date: '2024-12-31',
+        hour: '10:00', // 10:00 está no passado (antes das 15:00)
+      })
+    ).rejects.toBeInstanceOf(DateNotValidError)
+  })
+
+  it('should allow scheduling for 10 minutes in the future', async () => {
+    vi.setSystemTime(new Date('2024-12-31T14:30:00'))
+
+    const professionalPerson = await personRepository.create({
+      id: 'person-01',
+      name: 'Dr. Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const professional = await professionalRepository.create({
+      person_id: professionalPerson.id,
+      crp: '123456789',
+      voluntary: false,
+    })
+
+    const userPerson = await personRepository.create({
+      id: 'person-02',
+      name: 'Maria Silva Santos',
+      birth_date: '1985-03-15',
+      cpf: '123.456.789-00',
+      address: 'Rua das Flores',
+      neighborhood: 'Centro',
+      number: 1232,
+      complement: 'Sala 201',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-8888',
+      email: 'maria.santos3@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const user = await userRepository.create({
+      gender: 'female',
+      person_id: userPerson.id,
+    })
+
+    const schedule = await scheduleRepository.create({
+      professionalPersonId: professional.person_id,
+      averageValue: 150,
+      cancellationPolicy: 24,
+      initialTime: new Date('2024-12-31T09:00:00.000Z'),
+      endTime: new Date('2024-12-31T18:00:00.000Z'),
+      interval: 60,
+      isControlled: true,
+      observation: 'Atendimento presencial',
+    })
+
+    await hourlyRepository.createHourlySlots(
+      schedule.id,
+      schedule.initialTime,
+      schedule.endTime,
+      schedule.interval
+    )
+
+    const { scheduling } = await sut.execute({
+      professionalPersonId: professional.person_id,
+      userPersonId: user.person_id,
+      scheduleId: schedule.id,
+      date: '2024-12-31',
+      hour: '15:00', // 15:00 está no futuro (30 minutos à frente)
     })
 
     const hourly = await hourlyRepository.getById(scheduling.hourlyId)
