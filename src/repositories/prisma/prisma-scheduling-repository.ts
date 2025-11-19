@@ -1,4 +1,4 @@
-import type { Prisma, Scheduling } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { getMonth } from 'date-fns'
 import { prisma } from '@/lib/prisma'
 import type { SchedulingRepository } from '../scheduling-repository'
