@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 import { fetchMany } from './fetch-many'
+import { fetchPatients } from './fetch-patients'
 import { getAttendanceRate } from './get-attendance-rate'
 import { getById } from './get-by-id'
 import { getDataForUpdateProfessional } from './get-data-for-update-professional'
@@ -17,4 +18,5 @@ export function routesProfessional(app: FastifyInstance) {
   app.register(getAttendanceRate)
   app.register(getDataForUpdateProfessional)
   app.register(updateProfessional)
+  app.register(fetchPatients)
 }

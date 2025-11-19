@@ -1,22 +1,23 @@
+import { differenceInCalendarYears } from 'date-fns'
 import { PersonNotFoundError } from '@/errors/person-not-found'
 import type { PersonRepository } from '@/repositories/person-repository'
 import type { ProfessionalRepository } from '@/repositories/professional-repository'
 import type { SchedulingRepository } from '@/repositories/scheduling-repository'
 
-interface GetPatientsUseCaseRequest {
+interface FetchPatientsUseCaseRequest {
   professionalId: string
   page: number
 }
 
-interface GetPatientsUseCaseReply {
-  patient: {
+interface FetchPatientsUseCaseReply {
+  patients: {
     patientId: string
     patientName: string
     patientAge: number
   }[]
 }
 
-export class GetPatientsUseCase {
+export class FetchPatientsUseCase {
   constructor(
     private professionalsRepository: ProfessionalRepository,
     private schedulingsRepository: SchedulingRepository,
@@ -26,7 +27,7 @@ export class GetPatientsUseCase {
   async execute({
     professionalId,
     page,
-  }: GetPatientsUseCaseRequest): Promise<GetPatientsUseCaseReply> {
+  }: FetchPatientsUseCaseRequest): Promise<FetchPatientsUseCaseReply> {
     const professional =
       await this.professionalsRepository.getById(professionalId)
 
@@ -40,14 +41,26 @@ export class GetPatientsUseCase {
         page
       )
 
-    const patients = await Promise.all(
+    const patientsWithData = await Promise.all(
       schedulings.map(async scheduling => {
+        const userData = await this.personRepository.findById(
+          scheduling.userPersonId
+        )
+
+        if (!userData) {
+          throw new PersonNotFoundError()
+        }
+
+        const age = differenceInCalendarYears(new Date(), userData.birth_date)
+
         return {
-          patientId: patient.id,
-          patientName: patient.name,
-          patientAge: patient.age,
+          patientId: userData.id,
+          patientName: userData.name,
+          patientAge: age,
         }
       })
     )
+
+    return { patients: patientsWithData }
   }
 }

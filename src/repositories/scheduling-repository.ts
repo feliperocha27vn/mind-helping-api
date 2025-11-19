@@ -23,4 +23,7 @@ export interface SchedulingRepository {
     professionalId: string,
     page: number
   ): Promise<Scheduling[]>
+  fetchPatientsByUserId(
+    userId: string,
+  ): Promise<Scheduling[]>
 }

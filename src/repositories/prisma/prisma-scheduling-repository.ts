@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@prisma/client'
+import type { Prisma, Scheduling } from '@prisma/client'
 import { getMonth } from 'date-fns'
 import type { SchedulingRepository } from '../scheduling-repository'
 
@@ -118,5 +118,28 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
     })
 
     return schedulingsByMonth.length
+  }
+
+  async fetchSchedulingsByProfessionalId(professionalId: string, page: number) {
+    const schedulings = await prisma.scheduling.findMany({
+      where: {
+        professionalPersonId: professionalId,
+      },
+      skip: (page - 1) * 10,
+      take: 10,
+    })
+
+    return schedulings
+  }
+
+  async fetchPatientsByUserId(userId: string) {
+    const schedulings = await prisma.scheduling.findMany({
+      where: {
+        userPersonId: userId,
+        onFinishedConsultation: true,
+      },
+    })
+
+    return schedulings
   }
 }

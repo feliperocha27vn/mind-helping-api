@@ -159,4 +159,10 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
     return schedulings.slice(pageStart, pageEnd)
   }
+
+  async fetchPatientsByUserId(userId: string) {
+    const schedulings = this.items.filter(item => item.userPersonId === userId && item.onFinishedConsultation === true)
+
+    return schedulings
+  }
 }
