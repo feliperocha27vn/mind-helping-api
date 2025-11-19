@@ -151,7 +151,9 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
 
   async fetchSchedulingsByProfessionalId(professionalId: string, page: number) {
     const schedulings = this.items.filter(
-      item => item.professionalPersonId === professionalId
+      item =>
+        item.professionalPersonId === professionalId &&
+        item.onFinishedConsultation === true
     )
 
     const pageStart = (page - 1) * 10
@@ -161,7 +163,10 @@ export class InMemorySchedulingRepository implements SchedulingRepository {
   }
 
   async fetchPatientsByUserId(userId: string) {
-    const schedulings = this.items.filter(item => item.userPersonId === userId && item.onFinishedConsultation === true)
+    const schedulings = this.items.filter(
+      item =>
+        item.userPersonId === userId && item.onFinishedConsultation === true
+    )
 
     return schedulings
   }

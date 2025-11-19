@@ -88,4 +88,62 @@ describe('Fetch Patients by Professional', () => {
     expect(reply.body.patients).toBeInstanceOf(Array)
     expect(reply.body.patients).toHaveLength(0)
   })
+
+  it('should not return duplicate patients when they have multiple finished consultations', async () => {
+    const { professional, schedule } = await createProfessionalAndSchedule()
+    const { user: patient } = await createUser()
+
+    const futureDate = new Date()
+    futureDate.setDate(futureDate.getDate() + 30)
+
+    const initialTime = new Date(futureDate)
+    initialTime.setUTCHours(9, 0, 0, 0)
+
+    const endTime = new Date(futureDate)
+    endTime.setUTCHours(18, 0, 0, 0)
+
+    const { hourlies } = await createHourlies(
+      schedule.id,
+      initialTime,
+      endTime,
+      schedule.interval ?? 0
+    )
+
+    // Create multiple finished consultations for the same patient
+    await prisma.scheduling.create({
+      data: {
+        professionalPersonId: professional.person_id,
+        userPersonId: patient.person_id,
+        hourlyId: hourlies[0].id,
+        onFinishedConsultation: true,
+      },
+    })
+
+    await prisma.scheduling.create({
+      data: {
+        professionalPersonId: professional.person_id,
+        userPersonId: patient.person_id,
+        hourlyId: hourlies[1].id,
+        onFinishedConsultation: true,
+      },
+    })
+
+    await prisma.scheduling.create({
+      data: {
+        professionalPersonId: professional.person_id,
+        userPersonId: patient.person_id,
+        hourlyId: hourlies[2].id,
+        onFinishedConsultation: true,
+      },
+    })
+
+    const reply = await request(app.server)
+      .get(`/professionals/patients/${professional.person_id}`)
+      .query({ page: 1 })
+
+    expect(reply.statusCode).toEqual(200)
+    expect(reply.body.patients).toBeInstanceOf(Array)
+    expect(reply.body.patients).toHaveLength(1)
+    expect(reply.body.patients[0].patientId).toEqual(patient.person_id)
+  })
 })

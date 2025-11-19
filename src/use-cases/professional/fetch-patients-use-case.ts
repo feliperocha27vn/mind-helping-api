@@ -41,11 +41,14 @@ export class FetchPatientsUseCase {
         page
       )
 
+    // Get unique patient IDs
+    const uniquePatientIds = Array.from(
+      new Set(schedulings.map(scheduling => scheduling.userPersonId))
+    )
+
     const patientsWithData = await Promise.all(
-      schedulings.map(async scheduling => {
-        const userData = await this.personRepository.findById(
-          scheduling.userPersonId
-        )
+      uniquePatientIds.map(async patientId => {
+        const userData = await this.personRepository.findById(patientId)
 
         if (!userData) {
           throw new PersonNotFoundError()

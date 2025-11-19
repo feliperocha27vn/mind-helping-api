@@ -1,9 +1,9 @@
+import { hash } from 'bcryptjs'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { PersonNotFoundError } from '@/errors/person-not-found'
 import { InMemoryPersonRepository } from '@/in-memory-repository/in-memory-person-repository'
 import { InMemoryProfessionalRepository } from '@/in-memory-repository/in-memory-professional-repository'
 import { InMemorySchedulingRepository } from '@/in-memory-repository/in-memory-scheduling-repository'
-import { PersonNotFoundError } from '@/errors/person-not-found'
-import { hash } from 'bcryptjs'
-import { beforeEach, describe, expect, it } from 'vitest'
 import { FetchPatientsUseCase } from './fetch-patients-use-case'
 
 let personRepository: InMemoryPersonRepository
@@ -401,5 +401,164 @@ describe('Fetch Patients Use Case', () => {
 
     expect(result.patients[0].patientName).toBe('First Patient')
     expect(result.patients[1].patientName).toBe('Second Patient')
+  })
+
+  it('should not return patients with unfinished consultations', async () => {
+    const professionalPerson = await personRepository.create({
+      name: 'Dr. Fernando Santos',
+      birth_date: '1980-05-20',
+      cpf: '888.999.000-00',
+      address: 'Rua dos Psicólogos',
+      neighborhood: 'Centro',
+      number: 100,
+      complement: 'Sala 101',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 98765-4321',
+      email: 'fernando@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    await professionalRepository.create({
+      person_id: professionalPerson.id,
+      crp: '22222/SP',
+      voluntary: false,
+    })
+
+    const finishedPatient = await personRepository.create({
+      name: 'Finished Patient',
+      birth_date: '1990-03-15',
+      cpf: '333.333.333-33',
+      address: 'Rua Test',
+      neighborhood: 'Test',
+      number: 1,
+      complement: 'Test',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-9999',
+      email: 'finished@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    const unfinishedPatient = await personRepository.create({
+      name: 'Unfinished Patient',
+      birth_date: '1992-07-20',
+      cpf: '444.444.444-44',
+      address: 'Rua Test',
+      neighborhood: 'Test',
+      number: 2,
+      complement: 'Test',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-9999',
+      email: 'unfinished@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    // Create scheduling with finished consultation
+    await schedulingRepository.create({
+      professionalPersonId: professionalPerson.id,
+      userPersonId: finishedPatient.id,
+      hourlyId: 'hourly-finished',
+      isCanceled: false,
+      onFinishedConsultation: true,
+    })
+
+    // Create scheduling with unfinished consultation
+    await schedulingRepository.create({
+      professionalPersonId: professionalPerson.id,
+      userPersonId: unfinishedPatient.id,
+      hourlyId: 'hourly-unfinished',
+      isCanceled: false,
+      onFinishedConsultation: false,
+    })
+
+    const result = await sut.execute({
+      professionalId: professionalPerson.id,
+      page: 1,
+    })
+
+    // Should only return the patient with finished consultation
+    expect(result.patients).toHaveLength(1)
+    expect(result.patients[0].patientName).toBe('Finished Patient')
+    expect(result.patients[0].patientId).toBe(finishedPatient.id)
+  })
+
+  it('should not return duplicate patients when they have multiple finished consultations', async () => {
+    const professionalPerson = await personRepository.create({
+      name: 'Dr. Mariana Costa',
+      birth_date: '1980-05-20',
+      cpf: '999.000.111-00',
+      address: 'Rua dos Psicólogos',
+      neighborhood: 'Centro',
+      number: 100,
+      complement: 'Sala 101',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 98765-4321',
+      email: 'mariana@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    await professionalRepository.create({
+      person_id: professionalPerson.id,
+      crp: '33333/SP',
+      voluntary: false,
+    })
+
+    const patient = await personRepository.create({
+      name: 'João Silva',
+      birth_date: '1990-03-15',
+      cpf: '555.555.555-55',
+      address: 'Rua Test',
+      neighborhood: 'Test',
+      number: 1,
+      complement: 'Test',
+      cep: '01234-567',
+      city: 'São Paulo',
+      uf: 'SP',
+      phone: '(11) 99999-9999',
+      email: 'joao.silva@email.com',
+      password_hash: await hash('senha123', 6),
+    })
+
+    // Create multiple finished consultations for the same patient
+    await schedulingRepository.create({
+      professionalPersonId: professionalPerson.id,
+      userPersonId: patient.id,
+      hourlyId: 'hourly-consultation-1',
+      isCanceled: false,
+      onFinishedConsultation: true,
+    })
+
+    await schedulingRepository.create({
+      professionalPersonId: professionalPerson.id,
+      userPersonId: patient.id,
+      hourlyId: 'hourly-consultation-2',
+      isCanceled: false,
+      onFinishedConsultation: true,
+    })
+
+    await schedulingRepository.create({
+      professionalPersonId: professionalPerson.id,
+      userPersonId: patient.id,
+      hourlyId: 'hourly-consultation-3',
+      isCanceled: false,
+      onFinishedConsultation: true,
+    })
+
+    const result = await sut.execute({
+      professionalId: professionalPerson.id,
+      page: 1,
+    })
+
+    // Should return the patient only once, even with multiple consultations
+    expect(result.patients).toHaveLength(1)
+    expect(result.patients[0].patientName).toBe('João Silva')
+    expect(result.patients[0].patientId).toBe(patient.id)
   })
 })
