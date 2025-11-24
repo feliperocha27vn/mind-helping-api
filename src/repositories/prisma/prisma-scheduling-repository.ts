@@ -1,6 +1,6 @@
+import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma/client'
 import { getMonth } from 'date-fns'
-import { prisma } from '@/lib/prisma'
 import type { SchedulingRepository } from '../scheduling-repository'
 
 export class PrismaSchedulingRepository implements SchedulingRepository {
@@ -23,7 +23,7 @@ export class PrismaSchedulingRepository implements SchedulingRepository {
 
   async getPatientsByProfessionalId(professionalId: string) {
     const patients = await prisma.scheduling.findMany({
-      where: { professionalPersonId: professionalId },
+      where: { professionalPersonId: professionalId , onFinishedConsultation: true},
       distinct: ['userPersonId'],
     })
 
