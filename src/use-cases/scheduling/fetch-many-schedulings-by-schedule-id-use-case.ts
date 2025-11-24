@@ -52,6 +52,11 @@ export class FetchManySchedulingsByScheduleIdUseCase {
       )
 
       for (const scheduling of schedullings) {
+        // Skip canceled schedulings
+        if (scheduling.isCanceled) {
+          continue;
+        }
+        
         const person = await this.personRepository.findById(
           scheduling.userPersonId
         )
